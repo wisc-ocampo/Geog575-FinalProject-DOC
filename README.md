@@ -2,12 +2,9 @@
 # ***The DOCs!***
 ---
 ## team members
-- Dhakal, Ashmita
-    - https://github.com/ashmitadhakal
-- Ocampo, Francisco
-    - https://github.com/wisc-ocampo
-- Carlton, Kenz
-    - https://github.com/SirMack42
+- [Dhakal, Ashmita](https://github.com/ashmitadhakal)
+- [Ocampo, Francisco](https://github.com/wisc-ocampo)
+- [Carlton, Kenz](https://github.com/SirMack42)
 ## final project
 ### final project brainstorm
 **around the world heatmap**
