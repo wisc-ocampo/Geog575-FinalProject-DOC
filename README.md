@@ -4,7 +4,7 @@
 ## team members
 - [Dhakal, Ashmita](https://github.com/ashmitadhakal)
 - [Ocampo, Francisco](https://github.com/wisc-ocampo)
-- [Carlton, Kenz](https://github.com/SirMack42)
+- [Carlton, Kenz](https://github.com/KenzCarlton)
 ## final project
 ### final project brainstorm
 **around the world heatmap**
