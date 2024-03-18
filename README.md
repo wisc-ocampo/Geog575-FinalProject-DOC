@@ -50,9 +50,16 @@
 - retrieve / yes
 - arrange / no
 - calculate / no
-## default
-1. Persona/Scenario
-    1. Persona
-    2. Scenario
-2. Requirements Document
-3. Wireframes
+## persona/scenario
+### persona
+Mary is a normal person who is interested in learning more about how the world and how its focus has shifted to different parts of it over time.
+She has a poor understanding of how different regions of the globe **compare** during and over time.
+She also has a poor understanding of how important countries are viewed (**ranked**) relative to eachother.
+### scenario
+Using our website, she will gain a better idea of **trends** and **patterns** over time as she explores the map through **sequence** and **retieve** operators.
+Our stories will highlight **outliers** and **anomalies** using the **sequence** operator as a means of demonstating points of interest throughout the map and timeline.
+She may also begin to develop **associations** between certain countries' relationships in the trends.
+## requirements document
+**Scope:** a brief history of global shifts in focus through the past 16 years.
+## wireframes
+to be determined (drawn)
