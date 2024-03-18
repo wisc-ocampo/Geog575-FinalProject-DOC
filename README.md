@@ -2,7 +2,7 @@
 # ***The DOCs!***
 ---
 ## team members
-- [Dhakal, Ashmita](https://github.com/ashmitadhakal)
+- [Dhakal,  Ashmita](https://github.com/ashmitadhakal)
 - [Ocampo, Francisco](https://github.com/wisc-ocampo)
 - [Carlton, Kenz](https://github.com/KenzCarlton)
 ## final project
