@@ -22,6 +22,14 @@
 
 **palimpsest map**
 > writing that has been erased and written over, but which is still legible; an exploration of the old maps of our local area or where we call home and how those traces are still etched into our modern day design
+
+**media presence of the globe**
+> a cartographic map showing the extent of the global reach marking major regions that would be explored. Additionally, extra layers would be assigned based on:
+> - true geographic area
+> - english media presence / opinion
+> - nepali media presence / opinion
+> - spanish media presence / opinion
+> These layers would shift the cartogram based on media presence
 ## default
 1. Persona/Scenario
     1. Persona
