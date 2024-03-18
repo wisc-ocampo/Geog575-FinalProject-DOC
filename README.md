@@ -30,6 +30,26 @@
 > - nepali media presence / opinion
 > - spanish media presence / opinion
 > These layers would shift the cartogram based on media presence
+## final project proposal
+> a cartogram showing changes in google trends interest, altering a countries physical geographic size relative to its percent interest for that year. alongside the map, viewers would be presented with highlights from that year in the form of stories for each region through the sequence exploration of the map.
+### needed features
+#### data
+- data set of the countries google trends interest
+- data set of countries land mass (km / miles)
+- lots of lots of research google trends peaks / history
+#### operands
+- sequence / yes
+- overlay / maybe
+- overview / no
+- resymbolize / yes
+- zoom / maybe
+- pan / maybe
+- reproject / no (check)
+- filter / no
+- search / no
+- retrieve / yes
+- arrange / no
+- calculate / no
 ## default
 1. Persona/Scenario
     1. Persona
