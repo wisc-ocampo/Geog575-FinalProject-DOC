@@ -45,16 +45,17 @@
 6. *highlight:* highlights regions which can be clicked to focus on
 7. *overview:* tells the user the current view they are in
 #### interaction
-1. *launch screen:* **overview**, providing a brief description of what one is about to see, as well as a *skip* button
-2. *first interactive:* **sequence and reproject**, after the launch screen, provides a slider / radio buttons where the user is prompted to select the most accurate representation of Earth's countries' land masses
-3. *results panel:* **overlay**, displays choice on top of the actual answer; fades into the geographic cartogram.
-4. *projection panel:* **reproject**, prompts user to move to next projection [equal worldview], then next [unequal worldview], then next [true (unequal or most recent) worldview] 
-5. *global timeline:* **sequence; retrieve**, prompts user to use timeline to jump to points of interest (anomalies); x3
-6. *regional highlight:* **overlay; pan; zoom**, prompts user to click a highlighted region to jump to
-7. *regional projection panel:* **reproject, filter**, prompts user to change projections again [geographic, global interest, regional interest] to regional interest
-8. *regional timeline:* **sequence; retieve**, prompts user to us etimeline to jump to new points of interest (obscured by global interest); additional number to show the jump in POIs
-9. *back:* **overlay**, highlights the button to return to the global cartographic map, allowing user to explore other regions or sequence through time
-10. (*skip* fades straight to this.)
+1. *launch screen:* **overview**. Provide a brief description of what one is about to see, as well as a *skip* button.
+2. *first interactive:* **sequence and reproject** objects. (Tutorial only) If the option is selected in the launch screen, provide a slider / radio buttons where the user is prompted to select the most accurate representation of Earth's countries' land masses.
+3. *results panel:* **overlay** objects. (Tutorial only) Display choice on top of the actual answer; fade into the geographic cartogram.
+4. *projection panel:* **reproject** objects.(Tutorial only) Display series of projections [equal worldview], then next [unequal worldview], then next [true (unequal or most recent) worldview].
+5. *global timeline:* **sequence, reproject** time; objects. Display query results by reprojecting the cartogram along the timeline sequence (x3 for tutorial).
+6. *global timeline key spots:* **retrieve** objects. Display query results for specific timeline point of interest (anomaly) (x3 for tutorial)
+7. *regional highlight:* **overlay; pan; zoom**, prompts user to click a highlighted region to jump to
+8. *regional projection panel:* **reproject, filter**, prompts user to change projections again [geographic, global interest, regional interest] to regional interest
+9. *regional timeline:* **sequence; retieve**, prompts user to us etimeline to jump to new points of interest (obscured by global interest); additional number to show the jump in POIs
+10. *back:* **overlay**, highlights the button to return to the global cartographic map, allowing user to explore other regions or sequence through time
+11. (*skip* fades straight to this.) 
 ### wireframes
 ---
 ---
