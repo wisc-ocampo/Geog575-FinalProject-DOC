@@ -5,7 +5,61 @@
 - [Dhakal,  Ashmita](https://github.com/ashmitadhakal)
 - [Ocampo, Francisco](https://github.com/wisc-ocampo)
 - [Carlton, Kenz](https://github.com/KenzCarlton)
-## final project
+## final project proposal
+### target user profile (persona)
+**name and position:**
+> Mary; *One Vision, One World* NGO; Community Manager
+
+**background description:**
+> Mary is an anthropologist and an activist who was newly hired as the community manager for an non-governmental organization based in the United States interested in promoted more equitable relations between all countries.
+> As part of this work, one of her major goals is to establish and promote interest for under-represented regions of the globe;
+> unfortunately, it is difficult to communicate to outsiders how skewed their view of the world is.
+> Additionally, it is also difficult to understand what events peak global interest or promote care for others far away from their country.
+> In other words, she desires a presentation that allows the public to easily *identify* their skewed worldview.
+> Furthermore, she hopes the tool can aid her team in *comparing* and *ranking* inequalities in representation (in the public mind) to better plan interventions promoting a more ethnorelativistic view.
+> Through this, she plans to develop *insights* about the Western-centric worldview, such as which countries are *better or worse off* because of it and which regions have many *anomalies* or *outliers*.
+> Finally, she desires the map to be flexible enough to accommodate changes in audience, such as being able to delineate into specific regions, making a distinction between *inside* and *outside groups*, aiding in seeing trends obscured by the complete dominance of the United States on the world stage.
+[218 words]
+### user case scenario
+> Given her que, Mary is asked to now present to a committee discussing the distribution of humanitarian aid across South Asia.
+> She has five minutes to set the stage for her colleague to argue for additional aid to be distributed to under-represented countries in the region.
+> Upon opening the interactive, it defaults to the world cartogram based strictly on geographic area.
+> By pressing **next**, the cartogram shifts to present the world when interest was most similar globally.
+> Pressing **next** again shifts the cartogram to present the world when it was interested about just one country.
+> Pressing **next** again shows world interest with the US affected, which was covertly kept in the geographic view until now.
+> Within one minute, the global bias in worldview was *identified*.
+> Several regions of the world are now highlighted in the geographic view, including South Asia.
+> Mary clicks the region, and it zooms into the region, first in the geographic, then in global interest.
+> A timeline appears at the bottom, highlighting [*ranking*] major events, which can be clicked to shift the cartogram to that point in time.
+> Using a switch button at the top of the screen, the view now changes to show only relative interest within the region.
+> Many previously absent countries now pop into existence, and the timeline now updates to show many other major events.
+> Given their own devices to explore, the committee begins to question their view of the region's need, *comparing* their own thoughts, the geographic view, the global interest, and the regional interest.
+> Furthermore, they realize how greatly the US *outlier* skews the world view.
+[257 words]
+### requirements document
+#### representation
+1. *geographic cartogram:* data about country's geographic area, calculated from the **Natural Earth, Admin 0 - without boundary lakes** shapefile that was used to determine countries.
+2. *worldview cartogram:* **Google Trends** data of every country, relative to the highest interest [US, Nov 2020] (already collected)
+4. *regional view cartogram:* **Google Trends** data relative to the regions of interest, expecting about 4 - 7
+5. *interest graph:* bar graph of relative interest of either (toggle-able) top five countries or quartile countries
+6. *highlight:* highlights regions which can be clicked to focus on
+7. *overview:* tells the user the current view they are in
+#### interaction
+1. *launch screen:* **overview**, providing a brief description of what one is about to see, as well as a *skip* button
+2. *first interactive:* **sequence and reproject**, after the launch screen, provides a slider / radio buttons where the user is prompted to select the most accurate representation of Earth's countries' land masses
+3. *results panel:* **overlay**, displays choice on top of the actual answer; fades into the geographic cartogram.
+4. *projection panel:* **reproject**, prompts user to move to next projection [equal worldview], then next [unequal worldview], then next [true (unequal or most recent) worldview] 
+5. *global timeline:* **sequence; retrieve**, prompts user to use timeline to jump to points of interest (anomalies); x3
+6. *regional highlight:* **overlay; pan; zoom**, prompts user to click a highlighted region to jump to
+7. *regional projection panel:* **reproject, filter**, prompts user to change projections again [geographic, global interest, regional interest] to regional interest
+8. *regional timeline:* **sequence; retieve**, prompts user to us etimeline to jump to new points of interest (obscured by global interest); additional number to show the jump in POIs
+9. *back:* **overlay**, highlights the button to return to the global cartographic map, allowing user to explore other regions or sequence through time
+10. (*skip* fades straight to this.)
+### wireframes
+---
+---
+---
+# outdated
 ### final project brainstorm
 **around the world heatmap**
 > suggestion to chart real and, or, fictional circumnavigations around the world, supporting features such as concurrent navigation to compare the timelines of travel
