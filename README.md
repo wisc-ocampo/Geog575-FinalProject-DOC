@@ -57,6 +57,20 @@
 10. *back:* **overlay:** object. (Tutorial only) Highlights the button to return to the global cartographic map, allowing user to explore other regions or sequence through time
 11. (*skip* fades straight to this.) 
 ### wireframes
+**wireframe 1:** *launch screen*
+![wireframe_1](https://github.com/wisc-ocampo/Geog575-FinalProject-DOC/assets/157857305/8946866a-42bf-4731-a566-5f3c5c9f3218)
+**wireframe 2:** *first interactive*
+![wireframe-2](https://github.com/wisc-ocampo/Geog575-FinalProject-DOC/assets/157857305/bd21cd60-2f72-43f4-825b-e1cf734a540a)
+**wireframe 3:** *results panel 1*
+![wireframe-3](https://github.com/wisc-ocampo/Geog575-FinalProject-DOC/assets/157857305/17aacc5e-d4d5-4d0e-b0fd-31768d599889)
+**wireframe 4:** *results panel 2*
+![wireframe-4](https://github.com/wisc-ocampo/Geog575-FinalProject-DOC/assets/157857305/1e405fe2-54e8-44a8-a110-94862ab68e30)
+**wireframe 5:** *worldview cartogram*
+![wireframe-5](https://github.com/wisc-ocampo/Geog575-FinalProject-DOC/assets/157857305/3268353d-61df-4a3b-8736-c0c77d2aeb5b)
+**wireframe 6:** *regional highlight*
+![wireframe-6](https://github.com/wisc-ocampo/Geog575-FinalProject-DOC/assets/157857305/895a7ac8-2a18-400b-a1db-fe5fd9503b4a)
+**wireframe 7:** *regional cartogram*
+![wireframe-7](https://github.com/wisc-ocampo/Geog575-FinalProject-DOC/assets/157857305/4c6cd081-b608-41ed-975d-a490ad31cdec)
 ---
 ---
 ---
