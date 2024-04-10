@@ -45,15 +45,15 @@
 6. *highlight:* highlights regions which can be clicked to focus on
 7. *overview:* tells the user the current view they are in
 #### interaction
-1. *launch screen:* **overview**. Provide a brief description of what one is about to see, as well as a *skip* button.
-2. *first interactive:* **sequence and resymbolize** objects. (Tutorial only) If the option is selected in the launch screen, provide a slider / radio buttons where the user is prompted to select the most accurate representation of Earth's countries' land masses.
+1. *launch screen:* **overview**. Provide a brief description of what one is about to see, as well as *continue* and *skip* buttons.
+2. *first interactive:* **sequence, resymbolize:** objects. (Tutorial only) If the option is selected in the launch screen, provide a slider / radio buttons where the user is prompted to select the most accurate representation of Earth's countries' land masses.
 3. *results panel:* **overlay:** objects. (Tutorial only) Display choice on top of the actual answer; fade into the geographic cartogram.
 4. *projection panel:* **resymbolize:** objects. Display querried symbolization, i.e., geographic data, interest data, interest data minus the USA (Tutorial runs through set series of projections: [equal worldview], [unequal worldview], [true (unequal or most recent) worldview]).
-5. *global timeline:* **sequence, resymbolize:** time; objects. Display query results by resymbolizing the cartogram along the timeline sequence.
+5. *global timeline:* **sequence; resymbolize:** time; objects. Display query results by resymbolizing the cartogram along the timeline sequence.
 6. *global timeline key spots:* **retrieve:** objects. Display query results for specific timeline point of interest (anomaly) (x3 for tutorial).
-7. *regional highlight:* **overlay; pan; zoom:** objects. Prompt user to click a highlighted region; display "zoomed in" map of clicked region.
+7. *regional highlight:* **overlay, pan, zoom:** objects. Prompt user to click a highlighted region; display "zoomed in" map of clicked region.
 8. *regional projection panel:* **resymbolize, filter:** objects. Display querried symbolization with added option of regional interest [geographic, global interest, regional interest]
-9. *regional timeline key spots:* **sequence; retieve:** objects. Display query results for new timeline points of interest (obscured by global interest); additional number to show the jump in POIs.
+9. *regional timeline key spots:* **sequence, retieve:** objects. Display query results for new timeline points of interest (obscured by global interest); additional number to show the jump in POIs.
 10. *back:* **overlay:** object. (Tutorial only) Highlights the button to return to the global cartographic map, allowing user to explore other regions or sequence through time
 11. (*skip* fades straight to this.) 
 ### wireframes
