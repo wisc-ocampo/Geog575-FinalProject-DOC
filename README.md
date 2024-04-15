@@ -1,5 +1,5 @@
-#### team name
-# ***The DOCs!***
+
+# *The DOCs!* (group) project
 ---
 ## team members
 - [Dhakal,  Ashmita](https://github.com/ashmitadhakal)
