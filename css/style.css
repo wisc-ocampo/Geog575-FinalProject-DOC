@@ -1,1 +1,10 @@
-/*insert style here*/
+.country {
+    fill: #cdcdcd;
+    stroke: #565555;
+    stroke-width: 2px;
+}
+
+.map {
+    border: medium solid #999;
+    margin: 10px 0 0 10px;
+}
