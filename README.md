@@ -58,6 +58,18 @@
 11. *back:* **overlay:** object. (Tutorial only) Highlights the button to return to the global cartographic map, allowing user to explore other regions or sequence through time.
 12. (*skip* fades straight to this.) 
 ### wireframes
+**wireframe 1:** *World view; world expression*
+![Screenshot 2024-04-24 142745](https://github.com/wisc-ocampo/Geog575-FinalProject-DOC/assets/157846504/55d58180-4c23-4c2e-8537-de2ba175d3c7)
+**wireframe 2:** *World view; regional selection*
+![Screenshot 2024-04-24 142805](https://github.com/wisc-ocampo/Geog575-FinalProject-DOC/assets/157846504/bdfc78b0-dc41-4fd7-bfa0-1c3b1180ccba)
+**wireframe 3:** *Regional view; regional expression*
+![Screenshot 2024-04-24 142825](https://github.com/wisc-ocampo/Geog575-FinalProject-DOC/assets/157846504/db9ae6fe-4c7d-4298-9f0d-7ebc2bf49c9e)
+
+
+---
+---
+---
+# outdated
 **wireframe 1:** *launch screen*
 ![wireframe_1](https://github.com/wisc-ocampo/Geog575-FinalProject-DOC/assets/157857305/8946866a-42bf-4731-a566-5f3c5c9f3218)
 **wireframe 2:** *first interactive*
@@ -72,10 +84,6 @@
 ![wireframe-6](https://github.com/wisc-ocampo/Geog575-FinalProject-DOC/assets/157857305/895a7ac8-2a18-400b-a1db-fe5fd9503b4a)
 **wireframe 7:** *regional cartogram*
 ![wireframe-7](https://github.com/wisc-ocampo/Geog575-FinalProject-DOC/assets/157857305/4c6cd081-b608-41ed-975d-a490ad31cdec)
----
----
----
-# outdated
 ### final project brainstorm
 **around the world heatmap**
 > suggestion to chart real and, or, fictional circumnavigations around the world, supporting features such as concurrent navigation to compare the timelines of travel
