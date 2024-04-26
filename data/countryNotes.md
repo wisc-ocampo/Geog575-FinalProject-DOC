@@ -1,0 +1,23 @@
+## country notes
+*countries with multiple entries in natual earth*
+- australia
+- bajos nuevos bank
+- bir tawil
+- brazilian islands
+- china
+- cuba
+- cyprus (no man's area)
+- denmark
+- eswatini (mis-spelling)
+- finland
+- france
+- israel
+- kazakhstan
+- netherlands
+- new zealand
+- scarborough reef
+- serranilla bank
+- southern patagonian ice field
+- spratly islands
+- united kingdom
+- united states of america
