@@ -7,16 +7,16 @@
         attrArray.push(`month_${i}`);
     }
 
-    var expressed = attrArray[0]; //initial attribute
+    var expressed = attrArray[200]; //initial attribute
 
     //begin script when window loads
     window.onload = setMap();
 
-//set up choropleth map
+    //set up choropleth map
 function setMap(){
     //map frame dimensions
     var width = window.innerWidth * .975,
-        height = window.innerHeight * .6;
+        height = window.innerHeight * .7;
 
     //create new svg container for the map
     var map = d3.select("body")
@@ -25,10 +25,10 @@ function setMap(){
         .attr("width", width)
         .attr("height", height);
 
-    //create Albers equal area conic projection centered on France
+    //create Albers equal area conic projection
 //need to change projection***
     var projection = d3.geoAlbers()
-        .center([0, 8])
+        .center([0, 5])
         .rotate([3, 0, 0])
         .parallels([0, 0])
         .scale(270)
@@ -46,8 +46,14 @@ function setMap(){
     function callback(data){               
         var csvData = data[0], countries = data[1];
 
-        //translate country TopoJSONs
-        var worldCountries = topojson.feature(countries, countries.objects.ne_50m_admin_0_countries_lakes).features;
+        //translate country TopoJSONs (NOTE: the object is "ne_50m_admin_0_countries_lakes", NOT the topojson name)
+        var baseCountries = topojson.feature(countries, countries.objects.ne_50m_admin_0_countries_lakes),
+                worldCountries = topojson.feature(countries, countries.objects.ne_50m_admin_0_countries_lakes).features;
+
+        var base = map.append("path")
+            .datum(baseCountries)
+            .attr("class", "baseCountries")
+            .attr("d", path);
 
         //join csv data to GeoJSON enumeration units
         worldCountries = joinData(worldCountries, csvData);
@@ -55,12 +61,11 @@ function setMap(){
         var colorScale = makeColorScale(csvData);
 
         //add enumeration units to the map
-        setEnumerationUnits(worldCountries, map, path, colorScale, csvData);
-
-        
+        setEnumerationUnits(worldCountries, map, path, colorScale, csvData);        
     };
 }; //end of setMap()
 
+//join topojson with csv data
 function joinData(worldCountries, csvData){
     //loop through csv to assign each set of csv attribute values to geojson region
     for (var i=0; i<csvData.length; i++){
@@ -87,8 +92,10 @@ function joinData(worldCountries, csvData){
     return worldCountries;
 };
 
+//create units and set choropleth coloring and cartogram sizing
 function setEnumerationUnits(worldCountries, map, path, colorScale){
     
+    //set non-contiguous cartogram scaling
     function transform(d, expressed) {
         const [x, y] = path.centroid(d);
         if (d.properties[expressed] >= 0){
@@ -121,15 +128,13 @@ function setEnumerationUnits(worldCountries, map, path, colorScale){
         .style("fill", function(d){
             if (d.properties[expressed] >= 0){
                 return colorScale(d.properties[expressed])
-            } else {
-                return "black"
-            }
+            } else {return "black"}
         })
         .attr("transform", d => transform(d, expressed));
 };
 
-//function to create color scale generator
-function makeColorScale(data){
+//create sequential color scale
+function makeColorScale(){
 
     const interpolation = d3
         .scaleSequential([0,100], d3.interpolateBlues);

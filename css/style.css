@@ -8,3 +8,9 @@
     border: medium solid #999;
     margin: 10px 0 0 10px;
 }
+
+.baseCountries{
+    fill: #676767;
+    stroke: #ffffff;
+    stroke-width: .25px;
+}
