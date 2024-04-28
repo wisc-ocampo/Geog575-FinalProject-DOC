@@ -15,7 +15,7 @@
 //set up choropleth map
 function setMap(){
     //map frame dimensions
-    var width = window.innerWidth * .8,
+    var width = window.innerWidth * .975,
         height = window.innerHeight * .6;
 
     //create new svg container for the map
@@ -28,10 +28,10 @@ function setMap(){
     //create Albers equal area conic projection centered on France
 //need to change projection***
     var projection = d3.geoAlbers()
-        .center([0, 0])
-        .rotate([0, 0, 0])
+        .center([0, 8])
+        .rotate([3, 0, 0])
         .parallels([0, 0])
-        .scale(200)
+        .scale(270)
         .translate([width / 2, height / 2]);
         
     var path = d3.geoPath()
@@ -39,7 +39,7 @@ function setMap(){
 
     //use Promise.all to parallelize asynchronous data loading
     var promises = [];    
-    promises.push(d3.csv("data/initial_countryGoogleTrends.csv")); //load attributes from csv    
+    promises.push(d3.csv("data/world.csv")); //load attributes from csv    
     promises.push(d3.json("data/initial_countries.topojson")); //load spatial data    
     Promise.all(promises).then(callback);
 
