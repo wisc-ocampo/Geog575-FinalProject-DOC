@@ -7,7 +7,7 @@
         attrArray.push(`month_${i}`);
     }
 
-    var expressed = attrArray[200]; //initial attribute
+    var expressed = attrArray[160]; //initial attribute
 
     //begin script when window loads
     window.onload = setMap();
@@ -16,7 +16,7 @@
 function setMap(){
     //map frame dimensions
     var width = window.innerWidth * .975,
-        height = window.innerHeight * .7;
+        height = window.innerHeight * .8;
 
     //create new svg container for the map
     var map = d3.select("body")
@@ -25,12 +25,10 @@ function setMap(){
         .attr("width", width)
         .attr("height", height);
 
-    //create Albers equal area conic projection
-//need to change projection***
-    var projection = d3.geoAlbers()
+    //create Equal Earth equal area projection
+    var projection = d3.geoEqualEarth()
         .center([0, 5])
-        .rotate([3, 0, 0])
-        .parallels([0, 0])
+        .rotate([-10, 0, 0])
         .scale(270)
         .translate([width / 2, height / 2]);
         
@@ -49,6 +47,8 @@ function setMap(){
         //translate country TopoJSONs (NOTE: the object is "ne_50m_admin_0_countries_lakes", NOT the topojson name)
         var baseCountries = topojson.feature(countries, countries.objects.ne_50m_admin_0_countries_lakes),
                 worldCountries = topojson.feature(countries, countries.objects.ne_50m_admin_0_countries_lakes).features;
+
+        setGraticule (map, path);
 
         var base = map.append("path")
             .datum(baseCountries)
@@ -137,8 +137,26 @@ function setEnumerationUnits(worldCountries, map, path, colorScale){
 function makeColorScale(){
 
     const interpolation = d3
-        .scaleSequential([0,100], d3.interpolateBlues);
+        .scaleSequential([0,100], d3.interpolateReds);
     return interpolation
+};
+
+function setGraticule(map, path){
+    const graticule = d3.geoGraticule().step([5, 5]);
+
+    const gratBackground = map
+        .append('path')
+        .datum(graticule.outline())
+        .attr('class', 'gratBackground')
+        .attr('d', path);
+
+    const gratLines = map
+        .selectAll('.gratLines')
+        .data(graticule.lines())
+        .enter()
+        .append('path')
+        .attr('class', 'gratLines')
+        .attr('d', path);
 };
 
 })();

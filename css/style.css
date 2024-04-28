@@ -14,3 +14,12 @@
     stroke: #ffffff;
     stroke-width: .25px;
 }
+
+.gratBackground {
+    fill: #1d1d1d;
+}
+
+.gratLines {
+    stroke: #ffffff;
+    stroke-width: .2px;
+}
