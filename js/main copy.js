@@ -55,7 +55,7 @@ function setMap(){
         var colorScale = makeColorScale(csvData);
 
         //add enumeration units to the map
-        setEnumerationUnits(worldCountries, map, path, colorScale, csvData);
+        setEnumerationUnits(worldCountries, map, path, colorScale);
 
         
     };
@@ -88,25 +88,9 @@ function joinData(worldCountries, csvData){
 };
 
 function setEnumerationUnits(worldCountries, map, path, colorScale){
-    
-    function transform(d, expressed) {
-        const [x, y] = path.centroid(d);
-        if (d.properties[expressed] >= 0){
-        return `
-          translate(${x},${y})
-          scale(${Math.sqrt(d.properties[expressed]*.01)})
-          translate(${-x},${-y})
-        `; 
-        } else {
-        return `
-          translate(${x},${y})
-          scale(${Math.sqrt(.01)})
-          translate(${-x},${-y})
-        `;
-        }
-      }
 
-    //add countries to map
+    
+    //add France regions to map
     var countries = map.selectAll(".countries")
         .data(worldCountries)
         .enter()
@@ -119,13 +103,8 @@ function setEnumerationUnits(worldCountries, map, path, colorScale){
         })
         .attr("d", path)
         .style("fill", function(d){
-            if (d.properties[expressed] >= 0){
-                return colorScale(d.properties[expressed])
-            } else {
-                return "black"
-            }
-        })
-        .attr("transform", d => transform(d, expressed));
+            return colorScale(d.properties[expressed]);
+        });
 };
 
 //function to create color scale generator
