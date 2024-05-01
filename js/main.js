@@ -61,7 +61,8 @@ function setMap(){
         var colorScale = makeColorScale(csvData);
 
         //add enumeration units to the map
-        setEnumerationUnits(worldCountries, map, path, colorScale, csvData);        
+        setEnumerationUnits(worldCountries, map, path, colorScale, csvData); 
+        setChart(csvData, colorScale) ;       
     };
 }; //end of setMap()
 
@@ -158,5 +159,114 @@ function setGraticule(map, path){
         .attr('class', 'gratLines')
         .attr('d', path);
 };
+function setChart(csvData, colorScale){
+    var chartWidth = 1500;
+    var chartHeight = 500;
+
+    // Margin for axis
+    var margin = { top: 20, right: 20, bottom: 40, left: 50 };
+    var width = chartWidth - margin.left - margin.right;
+    var height = chartHeight - margin.top - margin.bottom;
+
+    // Scales for x and y axes
+    const xScale = d3.scaleLinear().domain([1, 244]).range([0, width]); // Adjust domain as needed
+    const yScale = d3.scaleLinear().domain([0, 100]).range([height, 10]); // Adjust domain as needed
+
+
+    var chart = d3
+        .select("body")
+        .append("svg")
+        .attr("width", chartWidth)
+        .attr("height", chartHeight)
+        .attr("class", "chart");
+
+    // Append a group for margin handling
+    var g = chart.append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    // Axis
+    g.append("g")
+        .attr("transform", "translate(0," + height + ")").call(d3.axisBottom(xScale));
+    g.append("g")
+        .call(d3.axisLeft(yScale))
+        .call(g => g.append("text")
+            .attr("x", -25)
+            .attr("y", -3)
+            .attr("fill", "currentColor")
+            .attr("text-anchor", "start")
+            .style("font-size", "12px")
+            .text("Trend Value (%)"));
+
+    // Line generator
+    const line = d3.line().x((d, i) => xScale(i + 1)).y((d) => yScale(d));
+    
+    // Create tooltip div (initially hidden)
+    var tooltip = d3
+        .select("body")
+        .append("div")
+        .attr("class", "tooltip")
+        .style("position", "absolute")
+        .style("background", "#f9f9f9")
+        .style("border", "1px solid #d3d3d3")
+        .style("padding", "5px")
+        .style("display", "none");
+
+    // Plot lines for each country
+    var lines = g.selectAll(".country-line")
+        .data(csvData)
+        .enter()
+        .append("path")
+        .attr("class", (d) => "country-line " + d.NAME)
+        .attr("d", (d) => {
+            var values = Object.keys(d)
+            .filter((key) => key.startsWith("month_"))
+            .map((key) => parseFloat(d[key]));
+            return line(values);
+        })
+        .attr("stroke", "#ccc")
+        .attr("stroke-width", 2)
+        .attr("fill", "none");
+    
+    lines.on("mouseover", function (event, d) {
+      // Highlight the hovered line
+      d3.select(this)
+        .attr("stroke", "yellow") // Change to desired color
+        .attr("stroke-width", 3); // Make it a bit thicker
+
+    // Calculate the month index from the mouse position
+    const mouseX = d3.pointer(event, g.node())[0];
+    const monthIndex = Math.round(xScale.invert(mouseX));
+  
+    // Get the value for this month
+    const monthValue = d[`month_${monthIndex}`] || "No data";
+
+    
+    // Update tooltip with current value
+  tooltip
+    .html(
+        `Country: ${d.NAME}<br>Subregion: ${d.subregion}<br>Month ${monthIndex}: ${monthValue}`
+    )
+    .style("left", `${event.pageX + 10}px`) // Adjust to prevent overlapping
+    .style("top", `${event.pageY - 10}px`) // Adjust for tooltip position
+    .style("display", "block");
+
+    // Fade other lines
+    lines.filter((other) => other !== d)
+        .attr("stroke-opacity", 0.1); // Adjust to desired opacity level
+    })
+    .on("mouseout", function (event, d) {
+      // Reset the line style
+        d3.select(this)
+            .attr("stroke", "#ccd")
+            .attr("stroke-width", 2); // Reset thickness
+
+        // Hide tooltip
+        tooltip.style("display", "none");
+
+        // Reset other lines' opacity
+        lines
+            .attr("stroke-opacity", 1); // Reset to full opacity
+    });          
+}
 
 })();
