@@ -7,7 +7,7 @@
         attrArray.push(`month_${i}`);
     }
 
-    var expressed = attrArray[160]; //initial attribute
+    var expressed = attrArray[2]; //initial attribute
 
     //begin script when window loads
     window.onload = setMap();
@@ -38,15 +38,15 @@ function setMap(){
     //use Promise.all to parallelize asynchronous data loading
     var promises = [];    
     promises.push(d3.csv("data/world.csv")); //load attributes from csv    
-    promises.push(d3.json("data/initial_countries.topojson")); //load spatial data    
+    promises.push(d3.json("data/CMSSimp4.topojson")); //load spatial data    
     Promise.all(promises).then(callback);
 
     function callback(data){               
         var csvData = data[0], countries = data[1];
 
-        //translate country TopoJSONs (NOTE: the object is "ne_50m_admin_0_countries_lakes", NOT the topojson name)
-        var baseCountries = topojson.feature(countries, countries.objects.ne_50m_admin_0_countries_lakes),
-                worldCountries = topojson.feature(countries, countries.objects.ne_50m_admin_0_countries_lakes).features;
+        //translate country TopoJSONs (NOTE: the object is "ne_50m_admin_0_countries_lakes", NOT the topojson SOVEREIGNT)
+        var baseCountries = topojson.feature(countries, countries.objects.CMSSimp4),
+                worldCountries = topojson.feature(countries, countries.objects.CMSSimp4).features;
 
         setGraticule (map, path);
 
@@ -71,13 +71,13 @@ function joinData(worldCountries, csvData){
     //loop through csv to assign each set of csv attribute values to geojson region
     for (var i=0; i<csvData.length; i++){
         var csvCountry = csvData[i]; //the current region
-        var csvKey = csvCountry.NAME; //the CSV primary key
+        var csvKey = csvCountry.SOVEREIGNT; //the CSV primary key
 
         //loop through geojson regions to find correct region
         for (var a=0; a<worldCountries.length; a++){
 
             var geojsonProps = worldCountries[a].properties; //the current region geojson properties
-            var geojsonKey = geojsonProps.NAME; //the geojson primary key
+            var geojsonKey = geojsonProps.SOVEREIGNT; //the geojson primary key
 
                 //where primary keys match, transfer csv data to geojson properties object
             if (geojsonKey == csvKey){
@@ -99,7 +99,7 @@ function setEnumerationUnits(worldCountries, map, path, colorScale){
     //set non-contiguous cartogram scaling
     function transform(d, expressed) {
         const [x, y] = path.centroid(d);
-        if (d.properties[expressed] >= 0){
+        if (d.properties[expressed] > 0){
         return `
           translate(${x},${y})
           scale(${Math.sqrt(d.properties[expressed]*.01)})
@@ -127,7 +127,7 @@ function setEnumerationUnits(worldCountries, map, path, colorScale){
         })
         .attr("d", path)
         .style("fill", function(d){
-            if (d.properties[expressed] >= 0){
+            if (d.properties[expressed] > 0){
                 return colorScale(d.properties[expressed])
             } else {return "black"}
         })
@@ -216,7 +216,7 @@ function setChart(csvData, colorScale){
         .data(csvData)
         .enter()
         .append("path")
-        .attr("class", (d) => "country-line " + d.NAME)
+        .attr("class", (d) => "country-line " + d.SOVEREIGNT)
         .attr("d", (d) => {
             var values = Object.keys(d)
             .filter((key) => key.startsWith("month_"))
@@ -244,7 +244,7 @@ function setChart(csvData, colorScale){
     // Update tooltip with current value
   tooltip
     .html(
-        `Country: ${d.NAME}<br>Subregion: ${d.subregion}<br>Month ${monthIndex}: ${monthValue}`
+        `Country: ${d.SOVEREIGNT}<br>Subregion: ${d.subregion}<br>Month ${monthIndex}: ${monthValue}`
     )
     .style("left", `${event.pageX + 10}px`) // Adjust to prevent overlapping
     .style("top", `${event.pageY - 10}px`) // Adjust for tooltip position
