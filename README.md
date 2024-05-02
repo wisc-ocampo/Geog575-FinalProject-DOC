@@ -5,6 +5,26 @@
 - [Dhakal,  Ashmita](https://github.com/ashmitadhakal)
 - [Ocampo, Francisco](https://github.com/wisc-ocampo)
 - [Carlton, Kenz](https://github.com/KenzCarlton)
+
+## README final project status 75% / May 02
+This final project is intended to aid in displaying the discrepancy in interest across regions of the world, given its focus (and associated aid, support, etc.) has historically, and continues to be, heavily centered on Western (especially American) interests.
+
+To do this, we plan to make three major elements.
+- a cartogram
+- a line graph
+- a POI retrieve function
+
+The idea is that the cartogram will display, through a **proportional cartogram and choropleth** the interest in particular countries based on global google trends data (which goes back to January 2004). The **line graph** will offer a different visualization of interest, with the line colors varying based on the region of the world the country is from (to better emphasize what regions are more prominent in the current view of the world. (The cartogram will similarly distinguish by choropleth color in the regional view, though the line graph is not a choropleth, just a single color representing that region.) Additionally, users will be able to sequence through the line graph to show the world during different time periods (showing the peak interest year by year). Finally, spikes or other abnormalites in interest will allow have **points of interest (POIs)**, either as points on the graph or as pop-ups when selecting countries or regions on the map. These POIs will then open the retrieve either over the map or as a sidebar, detailing more information about the event that sparked global interests.
+
+Both sets of data will also be able to be re-expressed to interest relative to the region (where regions are based on those set by the United Nations). Because google trends data is relative, all values are percentages relative to the highest interest value. On the global scale, that is the United States in November of 2020. Regional data will thus be relative to the highest value within countries of the region, which so far has proven to result in many new spikes of interest appearing that were previously minimized the by US's overwhelming dominance in global interest. These additional POIs will only appear and be distinguished in the regional view to better give an idea about all the global events that fell under the world's western-centric radar.
+
+Currently, the cartogram and line graph are functional with the global data sets. What still needs to be done is:
+- implement the sequence operator
+- finish compiling the regional data sets
+- research the POIs
+- implement the POI expression
+- finalize design decisions, such as assigning regions their colors
+
 ## final project proposal
 ### target user profile (persona)
 **name and position:**
