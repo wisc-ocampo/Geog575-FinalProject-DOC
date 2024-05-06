@@ -2,6 +2,33 @@
 (function(){
 
     //pseudo-global variables
+    // Define unique subregions and create color scale
+    const uniqueSubregions = [
+        "Antarctica",
+        "Australia and New Zealand",
+        "Caribbean",
+        "Central America",
+        "Central Asia",
+        "Eastern Africa",
+        "Eastern Asia",
+        "Eastern Europe",
+        "Indeterminate",
+        "Melanesia",
+        "Micronesia",
+        "Middle Africa",
+        "Northern Africa",
+        "Northern America",
+        "Northern Europe",
+        "Polynesia",
+        "South America",
+        "South-Eastern Asia",
+        "Southern Africa",
+        "Southern Asia",
+        "Southern Europe",
+        "Western Africa",
+        "Western Asia",
+        "Western Europe"
+    ];
     var attrArray = []; //list of months
     for (let i = 1; i < 245; i++) {
         attrArray.push(`month_${i}`);
@@ -70,7 +97,7 @@ function setMap(){
 
         //add enumeration units to the map
         setEnumerationUnits(worldCountries, map, path, colorScale, csvData); 
-        setChart(csvData, colorScale) ;     
+        setChart(csvData) ;     
         reexpressButtons(csvData);  
     };
 }; //end of setMap()
@@ -173,19 +200,21 @@ function setGraticule(map, path){
         .attr('class', 'gratLines')
         .attr("d", d3.geoPath().projection(projection));
    };
-function setChart(csvData, colorScale){
-    var chartWidth = window.innerWidth *.8;
-    var chartHeight = window.innerHeight * .35;
+function setChart(csvData){
+    const chartWidth = window.innerWidth *.8;
+    const chartHeight = window.innerHeight * .35;
 
     // Margin for axis
-    var margin = { top: 20, right: 20, bottom: 20, left: 40 };
-    var width = chartWidth - margin.left - margin.right;
-    var height = chartHeight - margin.top - margin.bottom;
+    const margin = { top: 20, right: 20, bottom: 20, left: 40 };
+    const width = chartWidth - margin.left - margin.right;
+    const height = chartHeight - margin.top - margin.bottom;
 
     // Scales for x and y axes
     const xScale = d3.scaleLinear().domain([1, 244]).range([0, width]); // Adjust domain as needed
     const yScale = d3.scaleLinear().domain([0, 100]).range([height, 10]); // Adjust domain as needed
 
+    
+    const colorScale = d3.scaleOrdinal(d3.schemeCategory10).domain(uniqueSubregions);
 
     var chart = d3
         .select("body")
@@ -243,15 +272,15 @@ function setChart(csvData, colorScale){
             .map((key) => parseFloat(d[key]));
             return line(values);
         })
-        .attr("stroke", "#ccc")
+        .attr("stroke", (d) => colorScale(d.subregion))
         .attr("stroke-width", 2)
         .attr("fill", "none");
     
     lines.on("mouseover", function (event, d) {
       // Highlight the hovered line
       d3.select(this)
-        .attr("stroke", "yellow") // Change to desired color
-        .attr("stroke-width", 3); // Make it a bit thicker
+        .attr("stroke", "yellow") 
+        .attr("stroke-width", 3); 
 
     // Calculate the month index from the mouse position
     const mouseX = d3.pointer(event, g.node())[0];
@@ -277,7 +306,7 @@ function setChart(csvData, colorScale){
     .on("mouseout", function (event, d) {
       // Reset the line style
         d3.select(this)
-            .attr("stroke", "#ccd")
+            .attr("stroke", (d) => colorScale(d.subregion))
             .attr("stroke-width", 2); // Reset thickness
 
         // Hide tooltip
