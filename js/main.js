@@ -104,7 +104,7 @@ function joinData(worldCountries, csvData){
 
 //create units and set choropleth coloring and cartogram sizing
 function setEnumerationUnits(worldCountries, map, path, colorScale){
-    
+
     //set non-contiguous cartogram scaling
     function transform(d, expressed) {
         const [x, y] = path.centroid(d);
@@ -146,7 +146,7 @@ function setEnumerationUnits(worldCountries, map, path, colorScale){
                 return "none"
             } else {return "black"}
         })
-        
+
         .attr("transform", d => transform(d, expressed));
 };
 
@@ -160,7 +160,7 @@ function makeColorScale(){
 
 function setGraticule(map, path){
     const graticule = d3.geoGraticule().step([10, 10]);
-    
+
     const gratBackground = map
         .append('path')
         .datum(graticule.outline())
@@ -172,7 +172,8 @@ function setGraticule(map, path){
         .append('path')
         .attr('class', 'gratLines')
         .attr("d", d3.geoPath().projection(projection));
-   };
+};
+
 function setChart(csvData, colorScale){
     var chartWidth = window.innerWidth *.8;
     var chartHeight = window.innerHeight * .35;
@@ -185,7 +186,6 @@ function setChart(csvData, colorScale){
     // Scales for x and y axes
     const xScale = d3.scaleLinear().domain([1, 244]).range([0, width]); // Adjust domain as needed
     const yScale = d3.scaleLinear().domain([0, 100]).range([height, 10]); // Adjust domain as needed
-
 
     var chart = d3
         .select("body")
@@ -277,7 +277,7 @@ function setChart(csvData, colorScale){
     .on("mouseout", function (event, d) {
       // Reset the line style
         d3.select(this)
-            .attr("stroke", "#ccd")
+            .attr("stroke", "#ccc")
             .attr("stroke-width", 2); // Reset thickness
 
         // Hide tooltip
@@ -293,6 +293,7 @@ function reexpressButtons(csvData){
 
     var buttonLeft = `${window.innerWidth * .875}px`
 
+    //create and modify button to set map to world comparison expression
     const worldButton = document.createElement('button');
     worldButton.innerText = 'relative to USA';
     worldButton.id = 'worldButton';
@@ -305,6 +306,7 @@ function reexpressButtons(csvData){
     worldButton.style.top = "20px";
     worldButton.style.left = buttonLeft;
 
+    //create and modify button to set map to regional comparison expression
     const regionButton = document.createElement('button')
     regionButton.innerText = 'relative to local region';
     regionButton.id = 'regionButton';
@@ -317,10 +319,12 @@ function reexpressButtons(csvData){
     regionButton.style.top = "60px";
     regionButton.style.left = buttonLeft;
 
+    //create function to toggle buttons
     function changeExpression(ONbutton, OFFbutton){
         ONbutton.innerText = "test";
         OFFbutton.innerText = OFFbutton.id;
     }
 
 }
+
 })();
