@@ -290,27 +290,37 @@ function setChart(csvData, colorScale){
 }
 
 function reexpressButtons(csvData){
+
+    var buttonLeft = `${window.innerWidth * .875}px`
+
     const worldButton = document.createElement('button');
     worldButton.innerText = 'relative to USA';
     worldButton.id = 'worldButton';
     worldButton.class = 'button';
     worldButton.addEventListener("click", function(event, d){
-        changeExpression();
+        changeExpression(worldButton, regionButton);
     })
     document.body.appendChild(worldButton);
-
+    worldButton.style.position = 'absolute';
+    worldButton.style.top = "20px";
+    worldButton.style.left = buttonLeft;
 
     const regionButton = document.createElement('button')
     regionButton.innerText = 'relative to local region';
     regionButton.id = 'regionButton';
     regionButton.class = 'button';
     regionButton.addEventListener("click", function(event, d){
-        changeExpression();
+        changeExpression(regionButton, worldButton);
     })
     document.body.appendChild(regionButton)
+    regionButton.style.position = 'absolute';
+    regionButton.style.top = "60px";
+    regionButton.style.left = buttonLeft;
 
-    function changeExpression(){
-        worldButton.innerText = "test";
+    function changeExpression(ONbutton, OFFbutton){
+        ONbutton.innerText = "test";
+        OFFbutton.innerText = OFFbutton.id;
     }
+
 }
 })();
