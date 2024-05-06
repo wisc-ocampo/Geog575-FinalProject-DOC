@@ -16,7 +16,7 @@
     //set up choropleth map
 function setMap(){
     //map frame dimensions
-    var width = window.innerWidth * .975,
+    var width = window.innerWidth * .8,
         height = window.innerHeight * .75;
 
     //create new svg container for the map
@@ -37,7 +37,7 @@ function setMap(){
     projection = d3.geoEqualEarth()
         .center([0, 5])
         .rotate([-10, 0, 0])
-        .scale(window.innerWidth / 6.2)
+        .scale(window.innerWidth / 6.75)
         .translate([width / 2, height / 2]);
         
     var path = d3.geoPath()
@@ -138,8 +138,14 @@ function setEnumerationUnits(worldCountries, map, path, colorScale){
         .style("fill", function(d){
             if (d.properties[expressed] > 0){
                 return colorScale(d.properties[expressed])
+            } else {return "#676767"}
+        })
+        .style("stroke", function(d){
+            if (d.properties[expressed] > 0){
+                return "none"
             } else {return "black"}
         })
+        
         .attr("transform", d => transform(d, expressed));
 };
 
@@ -167,7 +173,7 @@ function setGraticule(map, path){
         .attr("d", d3.geoPath().projection(projection));
    };
 function setChart(csvData, colorScale){
-    var chartWidth = window.innerWidth *.99;
+    var chartWidth = window.innerWidth *.8;
     var chartHeight = window.innerHeight * .35;
 
     // Margin for axis

@@ -1,7 +1,7 @@
 .country {
     fill: #cdcdcd;
-    stroke: #565555;
-    stroke-width: .5px;
+    stroke: #676767;
+    stroke-width: 5px;
 }
 
 .map {
@@ -11,7 +11,7 @@
 .baseCountries{
     fill: #676767;
     stroke: #ffffff;
-    stroke-width: .25px;
+    stroke-width: .15px;
 }
 
 /* gratBackground and gratLines fills MUST be set to same color*/
