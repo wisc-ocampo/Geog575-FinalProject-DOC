@@ -201,7 +201,7 @@ function setGraticule(map, path){
         .attr("d", d3.geoPath().projection(projection));
 };
 
-function setChart(csvData, colorScale){
+function setChart(csvData){
     var chartWidth = window.innerWidth *.8;
     var chartHeight = window.innerHeight * .35;
 
@@ -213,6 +213,8 @@ function setChart(csvData, colorScale){
     // Scales for x and y axes
     const xScale = d3.scaleLinear().domain([1, 244]).range([0, width]); // Adjust domain as needed
     const yScale = d3.scaleLinear().domain([0, 100]).range([height, 10]); // Adjust domain as needed
+    
+    const regionColorScale = d3.scaleOrdinal(d3.schemeCategory10).domain(uniqueSubregions);
 
     var chart = d3
         .select("body")
@@ -270,7 +272,7 @@ function setChart(csvData, colorScale){
             .map((key) => parseFloat(d[key]));
             return line(values);
         })
-        .attr("stroke", (d) => colorScale(d.subregion))
+        .attr("stroke", (d) => regionColorScale(d.subregion))
         .attr("stroke-width", 2)
         .attr("fill", "none");
     
@@ -278,7 +280,7 @@ function setChart(csvData, colorScale){
       // Highlight the hovered line
       d3.select(this)
         .attr("stroke", "yellow") 
-        .attr("stroke-width", 3); 
+        .attr("stroke-width", 4); 
 
     // Calculate the month index from the mouse position
     const mouseX = d3.pointer(event, g.node())[0];
@@ -304,7 +306,7 @@ function setChart(csvData, colorScale){
     .on("mouseout", function (event, d) {
       // Reset the line style
         d3.select(this)
-            .attr("stroke", "#ccc")
+            .attr("stroke", (d) => regionColorScale(d.subregion))
             .attr("stroke-width", 2); // Reset thickness
 
         // Hide tooltip
