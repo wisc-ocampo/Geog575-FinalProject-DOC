@@ -17,20 +17,27 @@
 function setMap(){
     //map frame dimensions
     var width = window.innerWidth * .975,
-        height = window.innerHeight * .8;
+        height = window.innerHeight * .75;
 
     //create new svg container for the map
     var map = d3.select("body")
         .append("svg")
         .attr("class", "map")
         .attr("width", width)
-        .attr("height", height);
+        .attr("height", height)
+        .attr("id", "map");
+
+        const box = document.getElementById(`map`);
+        box.style.position = 'absolute';
+        box.style.top = 1;
+        box.style.left = 1;
+
 
     //create Equal Earth equal area projection
     projection = d3.geoEqualEarth()
         .center([0, 5])
         .rotate([-10, 0, 0])
-        .scale(270)
+        .scale(window.innerWidth / 6.2)
         .translate([width / 2, height / 2]);
         
     var path = d3.geoPath()
@@ -160,11 +167,11 @@ function setGraticule(map, path){
         .attr("d", d3.geoPath().projection(projection));
    };
 function setChart(csvData, colorScale){
-    var chartWidth = 1500;
-    var chartHeight = 500;
+    var chartWidth = window.innerWidth *.99;
+    var chartHeight = window.innerHeight * .35;
 
     // Margin for axis
-    var margin = { top: 20, right: 20, bottom: 40, left: 50 };
+    var margin = { top: 20, right: 20, bottom: 20, left: 40 };
     var width = chartWidth - margin.left - margin.right;
     var height = chartHeight - margin.top - margin.bottom;
 
@@ -178,7 +185,13 @@ function setChart(csvData, colorScale){
         .append("svg")
         .attr("width", chartWidth)
         .attr("height", chartHeight)
-        .attr("class", "chart");
+        .attr("class", "chart")
+        .attr("id", "chart");
+        
+        const box = document.getElementById(`chart`);
+        box.style.position = 'absolute';
+        box.style.top = window.innerHeight * .625;
+        box.style.left = 1;
 
     // Append a group for margin handling
     var g = chart.append("g")
