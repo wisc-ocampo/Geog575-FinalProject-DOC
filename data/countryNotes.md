@@ -1,48 +1,37 @@
 ## country notes
-*countries with multiple entries in natual earth*
-- australia
-- brazilian islands
-- china
-- cuba
-- greenland
+### special issues
+- greenland / denmark territory
 - eswatini (mis-spelling) / corrected
-- finland
-- france
-- israel > palestine
-- Kashmir
-- kazakhstan
-- netherlands
-- new zealand
-- united kingdom
-- united states of america
+- israel - palestine separated
 
-*disputed territories*
-> all moved under `indeterminate`
-- bajos nuevos bank
-- bir tawil
-- cyprus (no man's area)
+### disputed territories
 - northern cyprus
-- scarborough reef
-- serranilla bank
-- southern patagonian ice field
-- spratly islands
+- israel - palestine
 
-*no polygon*
+**missing countries**
+- andorra
 - antigua and barbuda
 - bahrain
 - barbados
+- capo verde
+- comoros
 - federated states of micronesia
 - grenada
 - kiribati
+- liechtenstein
 - malta
 - maldives
 - marshall islands
+- mauritius
 - monaco
 - nauru
+- palau
 - saint kitts and nevis
 - saint lucia
 - saint vincent and the grenadines
 - seychelles
+- samoa
+- san marino
 - singapore
 - tonga
 - tuvalu
