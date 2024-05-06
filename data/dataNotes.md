@@ -8,9 +8,11 @@ countryNotes.md
 
 initial_Countries.topojson
 > no idea, ask Kenz
+> former test. removing file; will remove this note on Tuesday
 
 MegaCities.csv
 > sounds familiar...
+> former test. removing file; will remove this note on Tuesday
 
 world.csv
 > google trends data for world interest, including the US

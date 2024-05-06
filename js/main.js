@@ -6,6 +6,7 @@
     for (let i = 1; i < 245; i++) {
         attrArray.push(`month_${i}`);
     }
+    var projection;
 
     var expressed = attrArray[2]; //initial attribute
 
@@ -26,7 +27,7 @@ function setMap(){
         .attr("height", height);
 
     //create Equal Earth equal area projection
-    var projection = d3.geoEqualEarth()
+    projection = d3.geoEqualEarth()
         .center([0, 5])
         .rotate([-10, 0, 0])
         .scale(270)
@@ -99,6 +100,7 @@ function setEnumerationUnits(worldCountries, map, path, colorScale){
     //set non-contiguous cartogram scaling
     function transform(d, expressed) {
         const [x, y] = path.centroid(d);
+
         if (d.properties[expressed] > 0){
         return `
           translate(${x},${y})
@@ -143,22 +145,20 @@ function makeColorScale(){
 };
 
 function setGraticule(map, path){
-    const graticule = d3.geoGraticule().step([5, 5]);
-
+    const graticule = d3.geoGraticule().step([10, 10]);
+    
     const gratBackground = map
         .append('path')
         .datum(graticule.outline())
         .attr('class', 'gratBackground')
-        .attr('d', path);
+        .attr("d", d3.geoPath().projection(projection));
 
     const gratLines = map
-        .selectAll('.gratLines')
-        .data(graticule.lines())
-        .enter()
+        .datum(graticule())
         .append('path')
         .attr('class', 'gratLines')
-        .attr('d', path);
-};
+        .attr("d", d3.geoPath().projection(projection));
+   };
 function setChart(csvData, colorScale){
     var chartWidth = 1500;
     var chartHeight = 500;

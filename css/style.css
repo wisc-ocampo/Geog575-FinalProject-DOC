@@ -15,11 +15,13 @@
     stroke-width: .25px;
 }
 
+/* gratBackground and gratLines fills MUST be set to same color due*/
 .gratBackground {
-    fill: #1d1d1d;
+    fill: #252525;
 }
 
 .gratLines {
     stroke: #ffffff;
     stroke-width: .2px;
+    fill: #252525;
 }
