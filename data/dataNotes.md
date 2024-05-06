@@ -1,18 +1,22 @@
 # A Short Description of the different files and their purpose
 
-CMSSimp4.topojson
-> the natural earth shape file, fully simplified, merged, and ready for data.
+`110mCountries.topojson`
+> the topojson for the map
 
-countryNotes.md
-> a list of all the changes to the original natural earth shapefile.
+`countryNotes.md`
+> notable changes made to the original natural earth 110m
 
-initial_Countries.topojson
-> no idea, ask Kenz
-> former test. removing file; will remove this note on Tuesday
+`dataNotes.md`
+> this file holding annotations of what the data files are
 
-MegaCities.csv
-> sounds familiar...
-> former test. removing file; will remove this note on Tuesday
+`regional.csv`
+> regional interest data by month; for cartogram
 
-world.csv
-> google trends data for world interest, including the US
+`regionalMax.csv`
+> regional interest data by year; max value; for chart
+
+`world.csv`
+> global interest data by month; for cartogram
+
+`worldMax.csv`
+> global interest data by year; max value; for chart
