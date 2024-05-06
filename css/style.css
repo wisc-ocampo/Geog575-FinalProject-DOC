@@ -1,22 +1,22 @@
 .country {
     fill: #cdcdcd;
-    stroke: #565555;
-    stroke-width: .5px;
+    stroke: #676767;
+    stroke-width: 5px;
 }
 
 .map {
-    border: medium solid #999;
     margin: 10px 0 0 10px;
 }
 
 .baseCountries{
     fill: #676767;
     stroke: #ffffff;
-    stroke-width: .25px;
+    stroke-width: .15px;
 }
 
-.gratBackground {
-    fill: #1d1d1d;
+/* gratBackground and gratLines fills MUST be set to same color*/
+.gratBackground, .gratLines {
+    fill: #201c42;
 }
 
 .gratLines {
