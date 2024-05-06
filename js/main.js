@@ -15,6 +15,7 @@
 
     //set up choropleth map
 function setMap(){
+
     //map frame dimensions
     var width = window.innerWidth * .8,
         height = window.innerHeight * .75;
@@ -52,7 +53,6 @@ function setMap(){
     function callback(data){               
         var csvData = data[0], countries = data[1];
 
-        //translate country TopoJSONs (NOTE: the object is "ne_50m_admin_0_countries_lakes", NOT the topojson SOVEREIGNT)
         var baseCountries = topojson.feature(countries, countries.objects.CMSSimp4),
                 worldCountries = topojson.feature(countries, countries.objects.CMSSimp4).features;
 
@@ -70,7 +70,8 @@ function setMap(){
 
         //add enumeration units to the map
         setEnumerationUnits(worldCountries, map, path, colorScale, csvData); 
-        setChart(csvData, colorScale) ;       
+        setChart(csvData, colorScale) ;     
+        reexpressButtons(csvData);  
     };
 }; //end of setMap()
 
@@ -288,4 +289,28 @@ function setChart(csvData, colorScale){
     });          
 }
 
+function reexpressButtons(csvData){
+    const worldButton = document.createElement('button');
+    worldButton.innerText = 'relative to USA';
+    worldButton.id = 'worldButton';
+    worldButton.class = 'button';
+    worldButton.addEventListener("click", function(event, d){
+        changeExpression();
+    })
+    document.body.appendChild(worldButton);
+
+
+    const regionButton = document.createElement('button')
+    regionButton.innerText = 'relative to local region';
+    regionButton.id = 'regionButton';
+    regionButton.class = 'button';
+    regionButton.addEventListener("click", function(event, d){
+        changeExpression();
+    })
+    document.body.appendChild(regionButton)
+
+    function changeExpression(){
+        worldButton.innerText = "test";
+    }
+}
 })();

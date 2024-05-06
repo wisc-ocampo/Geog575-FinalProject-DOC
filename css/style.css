@@ -23,3 +23,11 @@
     stroke: #ffffff;
     stroke-width: .2px;
 }
+
+#world {
+    font-size: 50;
+}
+
+#buttons {
+    fill: black
+}
