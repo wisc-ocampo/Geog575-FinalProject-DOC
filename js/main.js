@@ -74,14 +74,17 @@ function setMap(){
     //use Promise.all to parallelize asynchronous data loading
     var promises = [];    
     promises.push(d3.csv("data/world.csv")); //load attributes from csv    
-    promises.push(d3.json("data/CMSSimp4.topojson")); //load spatial data    
+    promises.push(d3.json("data/_110mCountries.topojson")); //load spatial data    
     Promise.all(promises).then(callback);
 
     function callback(data){               
         var csvData = data[0], countries = data[1];
 
-        var baseCountries = topojson.feature(countries, countries.objects.CMSSimp4),
-                worldCountries = topojson.feature(countries, countries.objects.CMSSimp4).features;
+        var test = countries.objects;
+        console.log(test);
+
+        var baseCountries = topojson.feature(countries, countries.objects._110mCountries),
+                worldCountries = topojson.feature(countries, countries.objects._110mCountries).features;
 
         setGraticule (map, path);
 
