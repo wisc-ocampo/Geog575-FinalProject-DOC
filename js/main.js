@@ -185,10 +185,10 @@ function setEnumerationUnits(countriesToUse, map, path){
                     return purples(d.properties[expressed]);
                 } else {
                     return grays(d.properties[expressed]);
-
                 }
             } else {return "#676767"}
         })
+        .style("stroke-width", 4)
         .style("stroke", function(d){
             if (d.properties[expressed] > 0){
                 return "none"
@@ -477,8 +477,6 @@ function makeRegionColorscales() {
     purples = d3.scaleSequential([0,100], d3.interpolatePurples);
     greens = d3.scaleSequential([0,100], d3.interpolateGreens);
     grays = d3.scaleSequential([0,100], (d3.interpolate("white", "black")))
-
-    
 
 };
 function clearMap(){
