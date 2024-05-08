@@ -206,6 +206,92 @@ function setGraticule(map, path){
         .attr("d", d3.geoPath().projection(projection));
 };
 
+function initializeInfoBox() {
+    var infoBox = d3.select("#info-box");
+    if (infoBox.empty()) {
+        infoBox = d3.select("body")
+            .append("div")
+            .attr("id", "info-box")
+            .style("position", "absolute")
+            .style("right", "0px")
+            .style("top", "0px")
+            .style("height", `${window.innerHeight}px`) // Adjust height to full screen
+            .style("width", "300px") // Fixed width for text wrapping
+            .style("background", "#f9f9f9")
+            .style("border", "1px solid #d3d3d3")
+            .style("padding", "10px")
+            .style("overflow-y", "auto") // Allow vertical scrolling
+            .style("display", "none"); // Initially hidden
+    }
+    return infoBox;
+}
+
+// Function to show the infobox with event data
+function showInfoBox(infoBox, eventData) {
+    const year = eventData.Date.split('.')[0];
+    const imagePath = `img/World/POI_${eventData.Country}_${year}.jpg`; 
+    const imageHTML = `<img src="${imagePath}" alt="${eventData.Country} event" style="width: 100%; height: auto;" />`;
+
+    infoBox
+        .style("display", "block") // Show the infobox
+        .html(
+            `<h3>${eventData.Country}</h3><p>${eventData.Date}</p><p>${eventData.Event}</p><br><br>${imageHTML}`
+        );
+}
+
+// Function to create event dots with a click interaction for the infobox
+function createEventDots(selection, eventData, xScale, yScale, csvData, showInfoBox) {
+    const getMonthIndex = (date) => {
+        if (typeof date === "string" && date.includes(".")) {
+            const [year, month] = date.split(".").map(Number);
+            const yearBase = 2004;
+            const monthIndex = (year - yearBase) * 12 + month;
+            if (monthIndex >= 1 && monthIndex <= 240) {
+                return monthIndex;
+            }
+            return null;
+        }
+        return null;
+    };
+
+    const getYCoordinate = (country, monthIndex) => {
+        const countryData = csvData.find((c) => c.SOVEREIGNT === country);
+        if (countryData) {
+            return yScale(parseFloat(countryData[`month_${monthIndex}`]));
+        }
+        return yScale(0); // Default if not found
+    };
+
+    selection
+        .selectAll(".event-dot")
+        .data(eventData)
+        .enter()
+        .append("circle")
+        .attr("class", "event-dot")
+        .attr("cx", (d) => {
+            const monthIndex = getMonthIndex(d.Date);
+            if (monthIndex !== null) {
+                return xScale(monthIndex);
+            }
+            return -999; // Default position
+        })
+        .attr("cy", (d) => {
+            const monthIndex = getMonthIndex(d.Date);
+            if (monthIndex !== null) {
+                return getYCoordinate(d.Country, monthIndex);
+            }
+            return yScale(0); // Default if invalid
+        })
+        .attr("r", 6)
+        .attr("fill", "red")
+        .style("cursor", "pointer")
+        .on("click", (event, d) => {
+            showInfoBox(d); // Show the infobox on click
+        });
+}
+
+
+
 function setChart(csvData, worldEventData) {
     var chartWidth = window.innerWidth * 0.8;
     var chartHeight = window.innerHeight * 0.45;
@@ -233,7 +319,7 @@ function setChart(csvData, worldEventData) {
 
     const box = document.getElementById("chart");
     box.style.position = "absolute";
-    box.style.top = `${window.innerHeight * 0.625}px`;
+    box.style.top = `${window.innerHeight * 0.8}px`;
     box.style.left = "1px";
 
     // Append a group for margin handling
@@ -251,18 +337,7 @@ function setChart(csvData, worldEventData) {
 
     // Line generator
     const line = d3.line().x((d, i) => xScale(i + 1)).y((d) => yScale(d));
-
-    // Create tooltip div
-    var tooltip = d3
-        .select("body")
-        .append("div")
-        .attr("class", "tooltip")
-        .style("position", "absolute")
-        .style("background", "#f9f9f9")
-        .style("border", "1px solid #d3d3d3")
-        .style("padding", "5px")
-        .style("display", "none");
-
+    
     // Plot lines for each country
     var lines = g
         .selectAll(".country-line")
@@ -279,6 +354,18 @@ function setChart(csvData, worldEventData) {
         .attr("stroke", (d) => regionColorScale(d.subregion))
         .attr("stroke-width", 2)
         .attr("fill", "none");
+
+    // Create tooltip div
+    var tooltip = d3
+        .select("body")
+        .append("div")
+        .attr("class", "tooltip")
+        .style("position", "absolute")
+        .style("background", "#f9f9f9")
+        .style("border", "1px solid #d3d3d3")
+        .style("padding", "5px")
+        .style("display", "none");
+
 
     // Add tooltip interaction for lines
     lines
@@ -312,99 +399,9 @@ function setChart(csvData, worldEventData) {
         });
        // console.log("!!!!!!!!!!!!")
 
-       const getMonthIndex = (date) => {
-        // Check if the date is a valid string with the expected format
-        if (typeof date === "string" && date.includes(".")) {
-            // Split the date into year and month
-            const [year, month] = date.split(".").map(Number);
-    
-            // Base year to calculate the relative month index
-            const yearBase = 2004; // Adjust if needed for your data range
-    
-            // Calculate the relative month index
-            const monthIndex = (year - yearBase) * 12 + month;
-    
-            // Validate the month index to ensure it's within a valid range
-            if (monthIndex >= 1 && monthIndex <= 240) { // Valid range check
-                return monthIndex;
-            } else {
-                console.error("Month index out of range:", monthIndex, "for date:", date);
-                return null; // Return null if out of range
-            }
-        } else {
-            console.error("Invalid date format:", date); // Log invalid date format
-            return null; // Return null for invalid date
-        }
-    };
+       var infoBox = initializeInfoBox(); // Initialize the infobox
 
-    const getYCoordinate = (country, monthIndex) => {
-        const countryData = csvData.find((c) => c.SOVEREIGNT === country);
-        if (countryData) {
-            return yScale(parseFloat(countryData[`month_${monthIndex}`]));
-        }
-        return yScale(0); // Default if country not found
-    };
-
-    var infoBox = d3.select("#info-box");
-    if (infoBox.empty()) {
-        infoBox = d3.select("body")
-            .append("div")
-            .attr("id", "info-box")
-            .style("position", "absolute")
-            .style("right", "0px") // Align to the right edge
-            .style("top", "0px") // Align at the top
-            .style("height", 80000) // Full screen height
-            .style("width", "300px") // Set a fixed width for text wrapping
-            .style("background", "#f9f9f9")
-            .style("border", "1px solid #d3d3d3")
-            .style("padding", "10px")
-            .style("overflow-y", "auto") // Enable vertical scrolling
-            .style("overflow-wrap", "break-word") // Break long words
-            .style("white-space", "normal") // Allow text wrapping
-            .style("display", "none"); // Initially hidden
-    };
-    
-    // Function to show the info-box with event data
-    const showInfoBox = (d) => {
-        const year = d.Date.split('.')[0]; // Extract the year from the event date
-        console.log(year)
-        const imagePath = `img/World/POI_${d.Country}_${year}.jpg`; // Adjust as needed for your pattern
-        const imageHTML = `<img src="${imagePath}" alt="${d.country} event" style="width: 100%; height: auto;" />`;
-
-        infoBox
-            .style("display", "block") // Show the info-box
-            .style("white-space", "normal") // Allow text wrapping
-            .html(`<h3>${d.Country}</h3><p>${d.Date}</p><p>${d.Event}</p><br><br>${imageHTML}`);
-    };
-    // Plot event dots on the chart
-    g.selectAll(".event-dot")
-    .data(worldEventData)
-    .enter()
-    .append("circle")
-    .attr("class", "event-dot")
-    .attr("cx", (d) => {
-        const monthIndex = getMonthIndex(d.Date);
-        if (monthIndex !== null) {
-            return xScale(monthIndex); // Use correct xScale
-        } else {
-            return -999; // Default position for invalid index
-        }
-    })
-    .attr("cy", (d) => {
-        const monthIndex = getMonthIndex(d.Date);
-        if (monthIndex !== null) {
-            const yCoord = getYCoordinate(d.Country, monthIndex); // Ensure Y-coordinate is correct
-            return yCoord;
-        }
-        return yScale(0); 
-    })
-    .attr("r", 6) // Ensure dot is visible
-    .attr("fill", "red")
-    .style("cursor", "pointer")
-    .on("click", (event, d) => {
-        // Display event information on the right side
-        showInfoBox(d);            
-    });
+       createEventDots(g, worldEventData, xScale, yScale, csvData, (eventData) => showInfoBox(infoBox, eventData));
 }
 
 function reexpressButtons(csvData){
