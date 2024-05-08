@@ -290,8 +290,6 @@ function createEventDots(selection, eventData, xScale, yScale, csvData, showInfo
         });
 }
 
-
-
 function setChart(csvData, worldEventData) {
     var chartWidth = window.innerWidth * 0.8;
     var chartHeight = window.innerHeight * 0.45;
