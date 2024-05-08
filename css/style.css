@@ -51,3 +51,12 @@
     height: 60px;
 }
 
+.chartTitle{
+    font-family: sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    fill: #4b4b4b;
+    white-space: pre-line;
+
+}
+

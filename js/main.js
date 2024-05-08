@@ -296,7 +296,7 @@ function setChart(csvData, worldEventData) {
     var chartHeight = window.innerHeight * 0.45;
 
     // Margin for axis
-    const margin = { top: 20, right: 20, bottom: 20, left: 40 };
+    const margin = { top: 20, right: 90, bottom: 20, left: 40 };
     const width = chartWidth - margin.left - margin.right;
     const height = chartHeight - margin.top - margin.bottom;
 
@@ -318,7 +318,7 @@ function setChart(csvData, worldEventData) {
 
     const box = document.getElementById("chart");
     box.style.position = "absolute";
-    box.style.top = `${window.innerHeight * 0.55}px`;
+    box.style.top = `${window.innerHeight * 0.75}px`;
     box.style.left = "1px";
 
     // Append a group for margin handling
@@ -326,12 +326,21 @@ function setChart(csvData, worldEventData) {
 
     // X and Y axes
     g.append("g").attr("transform", `translate(0, ${height})`).call(d3.axisBottom(xScale));
-    g.append("g").call(d3.axisLeft(yScale)).append("text")
-        .attr("x", -25)
-        .attr("y", -3)
+    g.append("g").append("text")
+        .attr("x", chartWidth*0.9)
+        .attr("y", chartHeight*0.9)
         .attr("fill", "currentColor")
         .attr("text-anchor", "start")
-        .style("font-size", "12px")
+        .style("font-size", "16px")
+        .style("font-weight", "bold")
+        .text("Month");
+    g.append("g").call(d3.axisLeft(yScale)).append("text")
+        .attr("x", -25)
+        .attr("y", -9)
+        .attr("fill", "currentColor")
+        .attr("text-anchor", "start")
+        .style("font-size", "15px")
+        .style("font-weight", "bold")
         .text("Trend Value (%)");
 
     // Line generator
@@ -353,7 +362,14 @@ function setChart(csvData, worldEventData) {
         .attr("stroke", (d) => regionColorScale(d.subregion))
         .attr("stroke-width", 2)
         .attr("fill", "none");
-
+        //create a text element for the chart title
+    var chartTitle = chart
+        .append("text")
+        .attr("x", chartWidth*0.2)
+        .attr("y", 40)
+        .attr("class", "chartTitle")
+        .text(
+        "Google trends values for all countries (coloured based on regions) relative to USA");
     // Create tooltip div
     var tooltip = d3
         .select("body")
