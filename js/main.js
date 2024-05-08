@@ -166,7 +166,7 @@ function setEnumerationUnits(countriesToUse, map, path){
             return "country " + d.properties.SOVEREIGNT;
         })
         .attr("class", function(d){
-            return "country_" + d.properties.SUBREGION;        
+            return `country_${d.properties.SUBREGION.replace(/\s+/g, '')}`;        
         })
         .attr("d", path)
         .style("fill", function(d){
@@ -194,8 +194,22 @@ function setEnumerationUnits(countriesToUse, map, path){
                 return "none"
             } else {return "black"}
         })
+        .attr("transform", d => transform(d, expressed))
+        .on("mouseover", (event, d) => {
+            d3.selectAll(`.country_${d.properties.SUBREGION.replace(/\s+/g, '')}`)
+            .style("stroke", "yellow")
+            .style("stroke-width", "10px")
 
-        .attr("transform", d => transform(d, expressed));
+        })
+        .on("mouseout", (event, d) => {
+            d3.selectAll(`.country_${d.properties.SUBREGION.replace(/\s+/g, '')}`)
+            .style("stroke", function(d){
+                if (d.properties[expressed] > 0){
+                    return "none"
+                } else {return "black"}
+            })
+            .style("stroke-width", 4);
+        })
 };
 
 //create sequential color scale
@@ -479,6 +493,7 @@ function makeRegionColorscales() {
     grays = d3.scaleSequential([0,100], (d3.interpolate("white", "black")))
 
 };
+
 function clearMap(){
     const elements = document.querySelectorAll('[class^="country_"]');
     elements.forEach(function(element) {
