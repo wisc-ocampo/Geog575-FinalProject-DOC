@@ -75,22 +75,24 @@ function setMap(){
     //use Promise.all to parallelize asynchronous data loading
     var promises = [];    
     promises.push(d3.csv("data/world.csv")); //load attributes from csv    
-    promises.push(d3.csv("data/regional.csv")); //load attributes from csv    
     promises.push(d3.json("data/_110mCountries.topojson")); //load spatial data 
+    promises.push(d3.csv("data/regional.csv")); //load attributes from csv 
+    promises.push(d3.json("data/region110mCountries.topojson")); //load spatial data    
     promises.push(d3.csv("data/World_POI.csv"));
     Promise.all(promises).then(callback);
 
     function callback(data){               
-        csvData = data[0], countries = data[1], worldEventData = data[3];
-        csvData2 = data[0], countries = data[2], worldEventData = data[3];
-        
+        csvData = data[0], countries = data[1], worldEventData = data[4], csvData2 = data[2], countriesRegional = data[3];
 
-        //var test = countries.objects;
-        //console.log(test);
+        var test = countries.objects;
+        console.log(test);
+        var test2 = countries.objects;
+        console.log(test2);
 
         var baseCountries = topojson.feature(countries, countries.objects._110mCountries);
         worldCountries = topojson.feature(countries, countries.objects._110mCountries).features;
-        regionalCountries = topojson.feature(countries, countries.objects._110mCountries).features;
+
+        regionalCountries = topojson.feature(countriesRegional, countriesRegional.objects.region110mCountries).features;
 
         setGraticule (map, path);
 
@@ -102,8 +104,8 @@ function setMap(){
         //join csv data to GeoJSON enumeration units
         worldCountries = joinData(worldCountries, csvData);
         regionalCountries = joinData(regionalCountries, csvData2);
-        console.log(worldCountries[159]);
-        console.log(regionalCountries[159]);
+
+
         world_colorScale = makeColorScale(csvData);
 
         //add enumeration units to the map
@@ -116,16 +118,18 @@ function setMap(){
 }; //end of setMap()
 
 //join topojson with csv data
-function joinData(UsedCountries, csvData){
+function joinData(UsedCountries, csv){
+    console.log(worldCountries[159]);
+
     //loop through csv to assign each set of csv attribute values to geojson region
-    for (var i=0; i<csvData.length; i++){
-        var csvCountry = csvData[i]; //the current region
+    for (var i=0; i<csv.length; i++){
+        var csvCountry = csv[i]; //the current region
         var csvKey = csvCountry.SOVEREIGNT; //the CSV primary key
 
         //loop through geojson regions to find correct region
-        for (var a=0; a<worldCountries.length; a++){
+        for (var a=0; a<UsedCountries.length; a++){
 
-            var geojsonProps = worldCountries[a].properties; //the current region geojson properties
+            var geojsonProps = UsedCountries[a].properties; //the current region geojson properties
             var geojsonKey = geojsonProps.SOVEREIGNT; //the geojson primary key
 
                 //where primary keys match, transfer csv data to geojson properties object
@@ -139,6 +143,8 @@ function joinData(UsedCountries, csvData){
             };
         };
     };
+    console.log(worldCountries[159]);
+
     return UsedCountries;
 };
 
