@@ -103,7 +103,7 @@ function setMap(){
 
         //add enumeration units to the map
         setEnumerationUnits(worldCountries, map, path, world_colorScale); 
-        setChart(csvData, worldEventData);     
+        setChart(csvData);     
         reexpressButtons();  
     };
 }; //end of setMap()
@@ -320,7 +320,7 @@ function createEventDots(selection, eventData, xScale, yScale, csvData, showInfo
         });
 }
 
-function setChart(csvData, worldEventData) {
+function setChart(csvData) {
     var chartWidth = window.innerWidth * 0.8;
     var chartHeight = window.innerHeight * 0.45;
 
@@ -457,6 +457,7 @@ function reexpressButtons(){
     worldButton.class = 'button';
     worldButton.addEventListener("click", function(event, d){
         changeExpression(worldButton, regionButton);
+        changeChart(csvData, "worldButton", "regionButton");
     })
     document.body.appendChild(worldButton);
     worldButton.style.position = 'absolute';
@@ -470,6 +471,8 @@ function reexpressButtons(){
     regionButton.class = 'button';
     regionButton.addEventListener("click", function(event, d){
         changeExpression(regionButton, worldButton);
+        changeChart(csvData2, "regionButton", "worldButton");
+
     })
     document.body.appendChild(regionButton)
     regionButton.style.position = 'absolute';
@@ -497,6 +500,32 @@ function reexpressButtons(){
             ONbutton.style.borderBottomRightRadius = "12px";
             setEnumerationUnits(regionalCountries, map, path); 
         };
+    }
+    function changeChart(chartData, ONbuttonID, OFFbuttonID) {
+        // Clear the current chart
+        d3.select("#chart").remove();
+
+        // Recreate the chart with the new data
+        setChart(chartData);
+        
+        // Update button styles
+        const ONbutton = document.getElementById(ONbuttonID);
+        const OFFbutton = document.getElementById(OFFbuttonID);
+
+        ONbutton.style.backgroundColor = "#a6a6a6";
+        OFFbutton.style.backgroundColor = "#d9d9d9";
+
+        if (ONbuttonID === "worldButton") {
+            ONbutton.style.borderTopLeftRadius = "12px";
+            ONbutton.style.borderTopRightRadius = "12px";
+            OFFbutton.style.borderBottomLeftRadius = "2px";
+            OFFbutton.style.borderBottomRightRadius = "2px";
+        } else {
+            OFFbutton.style.borderTopLeftRadius = "2px";
+            OFFbutton.style.borderTopRightRadius = "2px";
+            ONbutton.style.borderBottomLeftRadius = "12px";
+            ONbutton.style.borderBottomRightRadius = "12px";
+        }
     }
 };
 
