@@ -34,8 +34,8 @@
         attrArray.push(`month_${i}`);
     }
     var projection;
-    var worldCountries = "", regionalCountries = "", path = "", map = "", csvData = "", csvData2 = "";
-
+    var worldCountries = "", regionalCountries = "", path = "", map = "", csvData = "", csvData2 = "", colors = [];
+    var reds = "", blues = "", greens = "", oranges = "", purples = "", grays = "";
     var expressed = attrArray[2]; //initial attribute
 
     //begin script when window loads
@@ -136,7 +136,7 @@ function joinData(UsedCountries, csv){
 };
 
 //create units and set choropleth coloring and cartogram sizing
-function setEnumerationUnits(countriesToUse, map, path, colorScale){
+function setEnumerationUnits(countriesToUse, map, path){
 
     //set non-contiguous cartogram scaling
     function transform(d, expressed) {
@@ -165,13 +165,28 @@ function setEnumerationUnits(countriesToUse, map, path, colorScale){
         .attr("id", function(d){
             return "country " + d.properties.SOVEREIGNT;
         })
-//        .attr("class", function(d){
-//            return "country_" + d.properties.SUBREGION;        })
-        .attr("class", "country")
+        .attr("class", function(d){
+            return "country_" + d.properties.SUBREGION;        
+        })
         .attr("d", path)
         .style("fill", function(d){
             if (d.properties[expressed] > 0){
-                return colorScale(d.properties[expressed])
+                if (countriesToUse == worldCountries){
+                    return world_colorScale(d.properties[expressed])
+                } else if (d.properties.SUBREGION == "Eastern Asia" || d.properties.SUBREGION == "Central America" || d.properties.SUBREGION == "Middle Africa"){
+                    return reds(d.properties[expressed]);
+                } else if (d.properties.SUBREGION == "Australia and New Zealand" || d.properties.SUBREGION == "Eastern Africa" || d.properties.SUBREGION == "Eastern Europe" ||  d.properties.SUBREGION == "Central Asia"){
+                    return blues(d.properties[expressed]);
+                } else if (d.properties.SUBREGION == "South-Eastern Asia" || d.properties.SUBREGION == "Northern Europe" || d.properties.SUBREGION == "South America"){
+                    return oranges(d.properties[expressed]);
+                } else if (d.properties.SUBREGION == "Melanesia" || d.properties.SUBREGION == "Western Africa" || d.properties.SUBREGION == "Southern Europe"){
+                    return greens(d.properties[expressed]);
+                } else if (d.properties.SUBREGION == "Polynesia" || d.properties.SUBREGION == "Southern Asia" || d.properties.SUBREGION == "Western Asia"){
+                    return purples(d.properties[expressed]);
+                } else {
+                    return grays(d.properties[expressed]);
+
+                }
             } else {return "#676767"}
         })
         .style("stroke", function(d){
@@ -435,6 +450,7 @@ function reexpressButtons(){
     function changeExpression(ONbutton, OFFbutton){
 
         clearMap();
+        makeRegionColorscales();
 
         ONbutton.style.backgroundColor = "#a6a6a6";
         OFFbutton.style.backgroundColor = "#d9d9d9";
@@ -443,34 +459,30 @@ function reexpressButtons(){
             ONbutton.style.borderTopRightRadius = "12px";
             OFFbutton.style.borderBottomLeftRadius = "2px";
             OFFbutton.style.borderBottomRightRadius = "2px";
-            setEnumerationUnits(worldCountries, map, path, world_colorScale); 
+            setEnumerationUnits(worldCountries, map, path); 
         } else {
             OFFbutton.style.borderTopLeftRadius = "2px";
             OFFbutton.style.borderTopRightRadius = "2px";
             ONbutton.style.borderBottomLeftRadius = "12px";
             ONbutton.style.borderBottomRightRadius = "12px";
-            setEnumerationUnits(regionalCountries, map, path, world_colorScale); 
+            setEnumerationUnits(regionalCountries, map, path); 
         };
     }
 };
 
 function makeRegionColorscales() {
-    var colors = [];
-    const reds = d3.scaleSequential([0,100], d3.interpolateReds);
-    colors.push[reds];
-    const oranges= d3.scaleSequential([0,100], d3.interpolateOranges);
-    colors.push[oranges];
-    const yellows = d3.scaleSequential([0,100], d3.interpolateYellows);
-    colors.push[yellows];
-    const blues = d3.scaleSequential([0,100], d3.interpolateBlues);
-    colors.push[blues];
-    const greens = d3.scaleSequential([0,100], d3.interpolateReds);
-    colors.push[greens];
-    const purples = d3.scaleSequential([0,100], d3.interpolatePurples);
-    colors.push[purples];
+    reds = d3.scaleSequential([0,100], d3.interpolateReds);
+    blues = d3.scaleSequential([0,100], d3.interpolateBlues);
+    oranges = d3.scaleSequential([0,100], d3.interpolateOranges);
+    purples = d3.scaleSequential([0,100], d3.interpolatePurples);
+    greens = d3.scaleSequential([0,100], d3.interpolateGreens);
+    grays = d3.scaleSequential([0,100], (d3.interpolate("white", "black")))
+
+    
+
 };
 function clearMap(){
-    const elements = document.querySelectorAll('.country');
+    const elements = document.querySelectorAll('[class^="country_"]');
     elements.forEach(function(element) {
       element.remove();
     });
