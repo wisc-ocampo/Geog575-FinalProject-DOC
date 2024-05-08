@@ -34,6 +34,7 @@
         attrArray.push(`month_${i}`);
     }
     var projection;
+    var worldCountries = "", regionalCountries = "", path = "", map = "", csvData = "", csvData2 = "";
 
     var expressed = attrArray[2]; //initial attribute
 
@@ -48,7 +49,7 @@ function setMap(){
         height = window.innerHeight * .7;
 
     //create new svg container for the map
-    var map = d3.select("body")
+    map = d3.select("body")
         .append("svg")
         .attr("class", "map")
         .attr("width", width)
@@ -68,25 +69,28 @@ function setMap(){
         .scale(window.innerWidth / 6.75)
         .translate([width / 2, height / 2]);
         
-    var path = d3.geoPath()
+    path = d3.geoPath()
         .projection(projection);
 
     //use Promise.all to parallelize asynchronous data loading
     var promises = [];    
     promises.push(d3.csv("data/world.csv")); //load attributes from csv    
+    promises.push(d3.csv("data/regional.csv")); //load attributes from csv    
     promises.push(d3.json("data/_110mCountries.topojson")); //load spatial data 
-    promises.push(d3.csv("data/World_POI.csv"))   
+    promises.push(d3.csv("data/World_POI.csv"));
     Promise.all(promises).then(callback);
 
     function callback(data){               
-        var csvData = data[0], countries = data[1], worldEventData = data[2]
+        csvData = data[0], countries = data[1], worldEventData = data[3];
+        csvData2 = data[0], countries = data[2], worldEventData = data[3];
         
 
-        var test = countries.objects;
+        //var test = countries.objects;
         //console.log(test);
 
-        var baseCountries = topojson.feature(countries, countries.objects._110mCountries),
-                worldCountries = topojson.feature(countries, countries.objects._110mCountries).features;
+        var baseCountries = topojson.feature(countries, countries.objects._110mCountries);
+        worldCountries = topojson.feature(countries, countries.objects._110mCountries).features;
+        regionalCountries = topojson.feature(countries, countries.objects._110mCountries).features;
 
         setGraticule (map, path);
 
@@ -97,18 +101,22 @@ function setMap(){
 
         //join csv data to GeoJSON enumeration units
         worldCountries = joinData(worldCountries, csvData);
-
-        var colorScale = makeColorScale(csvData);
+        regionalCountries = joinData(regionalCountries, csvData2);
+        console.log(worldCountries[159]);
+        console.log(regionalCountries[159]);
+        world_colorScale = makeColorScale(csvData);
 
         //add enumeration units to the map
-        setEnumerationUnits(worldCountries, map, path, colorScale, csvData); 
-        setChart(csvData, worldEventData) ;     
-        reexpressButtons(csvData);  
+        setEnumerationUnits(worldCountries, map, path, world_colorScale); 
+        setChart(csvData, worldEventData);     
+        reexpressButtons();  
+
+
     };
 }; //end of setMap()
 
 //join topojson with csv data
-function joinData(worldCountries, csvData){
+function joinData(UsedCountries, csvData){
     //loop through csv to assign each set of csv attribute values to geojson region
     for (var i=0; i<csvData.length; i++){
         var csvCountry = csvData[i]; //the current region
@@ -131,11 +139,11 @@ function joinData(worldCountries, csvData){
             };
         };
     };
-    return worldCountries;
+    return UsedCountries;
 };
 
 //create units and set choropleth coloring and cartogram sizing
-function setEnumerationUnits(worldCountries, map, path, colorScale){
+function setEnumerationUnits(countriesToUse, map, path, colorScale){
 
     //set non-contiguous cartogram scaling
     function transform(d, expressed) {
@@ -158,15 +166,16 @@ function setEnumerationUnits(worldCountries, map, path, colorScale){
 
     //add countries to map
     var countries = map.selectAll(".countries")
-        .data(worldCountries)
+        .data(countriesToUse)
         .enter()
         .append("path")
         .attr("id", function(d){
             return "country " + d.properties.countryData;
         })
-        .attr("class", function(d){
-            return "country " + d.properties.subregion;
-        })
+//        .attr("class", function(d){
+//            return "country " + d.properties.subregion;
+//        })
+        .attr("class", "country")
         .attr("d", path)
         .style("fill", function(d){
             if (d.properties[expressed] > 0){
@@ -180,6 +189,8 @@ function setEnumerationUnits(worldCountries, map, path, colorScale){
         })
 
         .attr("transform", d => transform(d, expressed));
+
+//    console.log(countriesToUse[6]);
 };
 
 //create sequential color scale
@@ -405,9 +416,9 @@ function setChart(csvData, worldEventData) {
         // Display event information on the right side
         showInfoBox(d);            
     });
-}
+};
 
-function reexpressButtons(csvData){
+function reexpressButtons(){
 
     var buttonLeft = `${window.innerWidth - 200}px`
 
@@ -439,6 +450,9 @@ function reexpressButtons(csvData){
 
     //create function to toggle buttons
     function changeExpression(ONbutton, OFFbutton){
+
+        clearMap();
+
         ONbutton.style.backgroundColor = "#a6a6a6";
         OFFbutton.style.backgroundColor = "#d9d9d9";
         if (ONbutton.id == "worldButton"){
@@ -446,14 +460,42 @@ function reexpressButtons(csvData){
             ONbutton.style.borderTopRightRadius = "12px";
             OFFbutton.style.borderBottomLeftRadius = "2px";
             OFFbutton.style.borderBottomRightRadius = "2px";
+            setEnumerationUnits(worldCountries, map, path, world_colorScale); 
+
         } else {
             OFFbutton.style.borderTopLeftRadius = "2px";
             OFFbutton.style.borderTopRightRadius = "2px";
             ONbutton.style.borderBottomLeftRadius = "12px";
-            ONbutton.style.borderBottomRightRadius = "12px";        };
+            ONbutton.style.borderBottomRightRadius = "12px";
+            setEnumerationUnits(regionalCountries, map, path, world_colorScale); 
+
+        };
 
     }
 
+};
+
+function makeRegionColorscales() {
+    var colors = [];
+    const reds = d3.scaleSequential([0,100], d3.interpolateReds);
+    colors.push[reds];
+    const oranges= d3.scaleSequential([0,100], d3.interpolateOranges);
+    colors.push[oranges];
+    const yellows = d3.scaleSequential([0,100], d3.interpolateYellows);
+    colors.push[yellows];
+    const blues = d3.scaleSequential([0,100], d3.interpolateBlues);
+    colors.push[blues];
+    const greens = d3.scaleSequential([0,100], d3.interpolateReds);
+    colors.push[greens];
+    const purples = d3.scaleSequential([0,100], d3.interpolatePurples);
+    colors.push[purples];
+};
+
+function clearMap(){
+    const elements = document.querySelectorAll('.country');
+    elements.forEach(function(element) {
+      element.remove();
+    });
 }
 
 })();
