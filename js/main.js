@@ -45,7 +45,7 @@ function setMap(){
 
     //map frame dimensions
     var width = window.innerWidth * .8,
-        height = window.innerHeight * .75;
+        height = window.innerHeight * .7;
 
     //create new svg container for the map
     var map = d3.select("body")
@@ -233,7 +233,7 @@ function setChart(csvData, worldEventData) {
 
     const box = document.getElementById("chart");
     box.style.position = "absolute";
-    box.style.top = `${window.innerHeight * 0.625}px`;
+    box.style.top = `${window.innerHeight * 0.55}px`;
     box.style.left = "1px";
 
     // Append a group for margin handling
@@ -409,7 +409,7 @@ function setChart(csvData, worldEventData) {
 
 function reexpressButtons(csvData){
 
-    var buttonLeft = `${window.innerWidth * .875}px`
+    var buttonLeft = `${window.innerWidth - 200}px`
 
     //create and modify button to set map to world comparison expression
     const worldButton = document.createElement('button');
@@ -434,13 +434,24 @@ function reexpressButtons(csvData){
     })
     document.body.appendChild(regionButton)
     regionButton.style.position = 'absolute';
-    regionButton.style.top = "60px";
+    regionButton.style.top = "78px";
     regionButton.style.left = buttonLeft;
 
     //create function to toggle buttons
     function changeExpression(ONbutton, OFFbutton){
-        ONbutton.innerText = "test";
-        OFFbutton.innerText = OFFbutton.id;
+        ONbutton.style.backgroundColor = "#a6a6a6";
+        OFFbutton.style.backgroundColor = "#d9d9d9";
+        if (ONbutton.id == "worldButton"){
+            ONbutton.style.borderTopLeftRadius = "12px";
+            ONbutton.style.borderTopRightRadius = "12px";
+            OFFbutton.style.borderBottomLeftRadius = "2px";
+            OFFbutton.style.borderBottomRightRadius = "2px";
+        } else {
+            OFFbutton.style.borderTopLeftRadius = "2px";
+            OFFbutton.style.borderTopRightRadius = "2px";
+            ONbutton.style.borderBottomLeftRadius = "12px";
+            ONbutton.style.borderBottomRightRadius = "12px";        };
+
     }
 
 }
