@@ -35,8 +35,6 @@ body {
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-weight: bold;
     outline-width: 20px;
-    border: 0px;
-
 }
 
 #worldButton {
@@ -58,13 +56,29 @@ body {
 
 /* CHART */
 
-.chartTitle{
+.chart {
+    fill: white;
+}
+
+.tick {
+    stroke: white;
+}
+
+.chartTitle {
     font-family: sans-serif;
     font-size: 18px;
     font-weight: bold;
     fill: #4b4b4b;
     white-space: pre-line;
 
+}
+
+.parameter-value{
+    fill: white;
+}
+
+.tick{
+    fill: white;
 }
 
 /* SIDEBAR */
@@ -77,4 +91,5 @@ body {
     padding: 10px;
     overflow-y: auto;
     display: none;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
 }

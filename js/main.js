@@ -375,7 +375,7 @@ function initializeInfoBox() {
             .append("div")
             .attr("id", "info-box")
             .attr("class", "sideBar")
-            .style("height", `${window.innerHeight - 245}px`)
+            .style("height", `${window.innerHeight - 150}px`)
             .style("width", `${window.innerWidth * .22}px`)
     }
 
@@ -393,7 +393,9 @@ function showInfoBox(infoBox, eventData) {
          imagePath = `img/Regional/POI_${eventData.Country}_${year}.jpg`;
     }
      
-    const imageHTML = `<img src="${imagePath}" alt="${eventData.Country} event" style="width: 100%; height: auto;" />`;
+    const imageHTML = `<img src="${imagePath}"` + 
+        `alt="${eventData.Country} event"` +
+        `style="width: 100%; height: auto;" />`;
 
     infoBox
         .style("display", "block")
@@ -485,21 +487,19 @@ function setChart(worldMapData, eventData) {
     const chartWidth = window.innerWidth * 0.8;
     const chartHeight = window.innerHeight * 0.4;
 
-    // Margin for axis
+    // set margins
     const margin = { top: 20, right: 90, bottom: 20, left: 40 };
     const width = chartWidth - margin.left - margin.right;
     const height = chartHeight - margin.top - margin.bottom;
 
-    // Scales for x and y axes
-    const xScale = d3.scaleLinear().domain([1, 20]).range([0, width]); // Adjust domain if needed
-    const yScale = d3.scaleLinear().domain([0, 100]).range([height, 0]); // Adjust domain if needed
+    // set scales
+    const xScale = d3.scaleLinear().domain([1, 20]).range([0, width]);
+    const yScale = d3.scaleLinear().domain([0, 100]).range([height, 0]);
 
     const regionColorScale = d3.scaleOrdinal(d3.schemeCategory10).domain(
         worldMapData.map((d) => d.subregion)
     );
     
-    
-
     // create chart
     const chart = d3
         .select("body")
@@ -514,12 +514,12 @@ function setChart(worldMapData, eventData) {
     box.style.top = `${window.innerHeight * 0.58}px`;
     box.style.left = "1px";
 
-    // Append a group for margin handling
+    // modify margins
     const g = chart
         .append("g")
         .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-    // X and Y axes
+    // create axis
     g.append("g")
         .attr("transform", `translate(0, ${height})`)
         .call(d3.axisBottom(xScale).ticks(20).tickFormat((d) => indexToYear(d)));
@@ -527,7 +527,7 @@ function setChart(worldMapData, eventData) {
         .append("text")
         .attr("x", chartWidth*0.905)
         .attr("y", chartHeight*0.9)
-        .attr("fill", "currentColor")
+        .attr("fill", "white")
         .attr("text-anchor", "start")
         .style("font-size", "16px")
         .style("font-weight", "bold")
@@ -537,13 +537,13 @@ function setChart(worldMapData, eventData) {
         .append("text")
         .attr("x", -25)
         .attr("y", -9)
-        .attr("fill", "currentColor")
+        .attr("fill", "white")
         .attr("text-anchor", "start")
         .style("font-size", "15px")
         .style("font-weight", "bold")
         .text("Trend Value (%)");
 
-    // Line generator
+    // line generator
     const line = d3.line().x((d, i) => xScale(i + 1)).y((d) => yScale(d));
     
     // Plot lines for each country
