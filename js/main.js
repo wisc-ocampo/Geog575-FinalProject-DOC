@@ -363,7 +363,7 @@ function setChart(csvData, eventData) {
 
     const box = document.getElementById("chart");
     box.style.position = "absolute";
-    box.style.top = `${window.innerHeight * 0.6}px`;
+    box.style.top = `${window.innerHeight * 0.8}px`;
     box.style.left = "1px";
 
     // Append a group for margin handling
@@ -372,7 +372,7 @@ function setChart(csvData, eventData) {
     // X and Y axes
     g.append("g").attr("transform", `translate(0, ${height})`).call(d3.axisBottom(xScale).ticks(20).tickFormat((d) => indexToYear(d)));
     g.append("g").append("text")
-        .attr("x", chartWidth*0.9)
+        .attr("x", chartWidth*0.905)
         .attr("y", chartHeight*0.9)
         .attr("fill", "currentColor")
         .attr("text-anchor", "start")
@@ -410,8 +410,8 @@ function setChart(csvData, eventData) {
         //create a text element for the chart title
     var chartTitle = chart
         .append("text")
-        .attr("x", chartWidth*0.2)
-        .attr("y", 40)
+        .attr("x", chartWidth*0.1)
+        .attr("y", 50)
         .attr("class", "chartTitle")
         .text(
         "Google trends values for all countries (coloured based on regions) relative to USA");
