@@ -744,17 +744,17 @@ function setSequenceControls(){
     function setSlider(){
         var slider = d3
         .sliderHorizontal()
-        .min(1)
-        .max(240)
+        .min(2004)
+        .max(2023)
         .step(1)
         .width(300)
         .displayValue(true)
         .on('onchange', (val) => {
             d3.select('#value').text(val);
-            expressed = attrArray[val-1];
+            expressed = attrArray[val-2004];
             updateMapUnits();
         })
-        .tickValues([12, 24, 36, 48]);
+        .tickValues([2005, 2010, 2015, 2020]);
 
         d3.select('#slider')
         .append('svg')
