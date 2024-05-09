@@ -34,7 +34,7 @@
         attrArray.push(`month_${i}`);
     }
     var projection;
-    var worldCountries = "", regionalCountries = "", path = "", map = "", csvData = "", csvData2 = "", regionalEventData = "";
+    var worldCountries = "", regionalCountries = "", path = "", map = "", csvData = "", csvData2 = "", regionalEventData = "", csvData3 = "", csvData4 = "";
     var reds = "", blues = "", greens = "", oranges = "", purples = "", grays = "";
     var expressed = attrArray[2]; //initial attribute
 
@@ -80,11 +80,13 @@ function setMap(){
     promises.push(d3.json("data/region110mCountries.topojson")); //load spatial 
     promises.push(d3.csv("data/World_POI.csv"));
     promises.push(d3.csv("data/Regional_POI.csv"));
+    promises.push(d3.csv("data/worldMax.csv"));
+    promises.push(d3.csv("data/regionalMax.csv"));
     Promise.all(promises).then(callback);
 
     function callback(data){               
         csvData = data[0], countries = data[1], worldEventData = data[4], csvData2 = data[2], countriesRegional = data[3], regionalEventData = data[5]
-
+        csvData3 =data[6], csvData4 = data[7]
         var baseCountries = topojson.feature(countries, countries.objects._110mCountries);
         worldCountries = topojson.feature(countries, countries.objects._110mCountries).features;
         regionalCountries = topojson.feature(countriesRegional, countriesRegional.objects.region110mCountries).features;
@@ -104,7 +106,7 @@ function setMap(){
 
         //add enumeration units to the map
         setEnumerationUnits(worldCountries, map, path, world_colorScale); 
-        setChart(csvData, worldEventData);     
+        setChart(csvData3, worldEventData);     
         reexpressButtons();
         makeRegionColorscales();
 
@@ -258,6 +260,16 @@ function initializeInfoBox() {
     }
     return infoBox;
 }
+function indexToYear(index) {
+    const yearBase = 2004; // Starting year
+    const totalYears = 21; // Total number of years from 2004 to 2023
+    if (index >= 1 && index <= totalYears) {
+        const year = yearBase + (index - 1); // Calculate year from index
+        return `${year}`; // e.g., "2004", "2005", ...
+    }
+    return ""; // Return empty if index is out of range
+}
+
 
 // Function to show the infobox with event data
 function showInfoBox(infoBox, eventData) {
@@ -274,27 +286,25 @@ function showInfoBox(infoBox, eventData) {
 
 // Function to create event dots with a click interaction for the infobox
 function createEventDots(selection, eventData, xScale, yScale, csvData, showInfoBox) {
-    const getMonthIndex = (date) => {
+    const getYear = (date) => {
         if (typeof date === "string" && date.includes(".")) {
-            const [year, month] = date.split(".").map(Number);
-            const yearBase = 2004;
-            const monthIndex = (year - yearBase) * 12 + month;
-            if (monthIndex >= 1 && monthIndex <= 240) {
-                
-                return monthIndex;
+            const [yearStr, monthStr] = date.split(".");
+            const year = parseInt(yearStr, 10); // Convert to integer
+            if (year >= 2004 && year <= 2023) { // Valid range
+                return year; // Return the year
             }
-            return null;
         }
-        return null;
+        return null; // Return null if invalid
     };
 
-    const getYCoordinate = (country, monthIndex) => {
+    const getYCoordinate = (country, year) => {
         const countryData = csvData.find((c) => c.SOVEREIGNT === country);
-        console.log(countryData)
         if (countryData) {
-            return yScale(parseFloat(countryData[`month_${monthIndex}`]));
+            const dataKey = `max_${year}`; // Build the data key
+            const value = parseFloat(countryData[dataKey]); // Get the trend value
+            return yScale(value); // Return scaled Y-coordinate
         }
-        return yScale(0); // Default if not found
+        return yScale(0); // Default if data not found
     };
 
     selection
@@ -304,16 +314,17 @@ function createEventDots(selection, eventData, xScale, yScale, csvData, showInfo
         .append("circle")
         .attr("class", "event-dot")
         .attr("cx", (d) => {
-            const monthIndex = getMonthIndex(d.Date);
-            if (monthIndex !== null) {
-                return xScale(monthIndex);
+            const year = getYear(d.Date); // Get the year from the date
+            if (year !== null) {
+                const yearIndex = year - 2004 + 1; // Convert year to index (1-based)
+                return xScale(yearIndex); // Return the scaled X-coordinate
             }
             return -999; // Default position
         })
         .attr("cy", (d) => {
-            const monthIndex = getMonthIndex(d.Date);
-            if (monthIndex !== null) {
-                return getYCoordinate(d.Country, monthIndex);
+            const year = getYear(d.Date); // Get the year from the date
+            if (year !== null) {
+                return getYCoordinate(d.Country, year); // Get the Y-coordinate
             }
             return yScale(0); // Default if invalid
         })
@@ -335,7 +346,7 @@ function setChart(csvData, eventData) {
     const height = chartHeight - margin.top - margin.bottom;
 
     // Scales for x and y axes
-    const xScale = d3.scaleLinear().domain([1, 240]).range([0, width]); // Adjust domain if needed
+    const xScale = d3.scaleLinear().domain([1, 21]).range([0, width]); // Adjust domain if needed
     const yScale = d3.scaleLinear().domain([0, 100]).range([height, 0]); // Adjust domain if needed
 
     const regionColorScale = d3.scaleOrdinal(d3.schemeCategory10).domain(
@@ -359,7 +370,7 @@ function setChart(csvData, eventData) {
     var g = chart.append("g").attr("transform", `translate(${margin.left}, ${margin.top})`);
 
     // X and Y axes
-    g.append("g").attr("transform", `translate(0, ${height})`).call(d3.axisBottom(xScale));
+    g.append("g").attr("transform", `translate(0, ${height})`).call(d3.axisBottom(xScale).ticks(20).tickFormat((d) => indexToYear(d)));
     g.append("g").append("text")
         .attr("x", chartWidth*0.9)
         .attr("y", chartHeight*0.9)
@@ -367,7 +378,7 @@ function setChart(csvData, eventData) {
         .attr("text-anchor", "start")
         .style("font-size", "16px")
         .style("font-weight", "bold")
-        .text("Month");
+        .text("Years");
     g.append("g").call(d3.axisLeft(yScale)).append("text")
         .attr("x", -25)
         .attr("y", -9)
@@ -389,7 +400,7 @@ function setChart(csvData, eventData) {
         .attr("class", (d) => "country-line " + d.SOVEREIGNT)
         .attr("d", (d) => {
             var values = Object.keys(d)
-                .filter((key) => key.startsWith("month_"))
+                .filter((key) => key.startsWith("max_"))
                 .map((key) => parseFloat(d[key]));
             return line(values);
         })
@@ -422,13 +433,14 @@ function setChart(csvData, eventData) {
             d3.select(this).attr("stroke", "yellow").attr("stroke-width", 4);
 
             const mouseX = d3.pointer(event, g.node())[0];
-            const monthIndex = Math.round(xScale.invert(mouseX));
+            const yearIndex = Math.round(xScale.invert(mouseX)); // Get index from xScale
 
-            const monthValue = d[`month_${monthIndex}`] || "No data";
+            const year = indexToYear(yearIndex); // Convert index to year
+            const yearValue = d[`max_${year}`] || "No data";
 
             tooltip
-                .html(
-                    `Country: ${d.SOVEREIGNT}<br>Subregion: ${d.subregion}<br>Month ${monthIndex}: ${monthValue}`
+            .html(
+                `Country: ${d.SOVEREIGNT}<br>Subregion: ${d.subregion}<br>Year: ${year}` // Display year instead of month
                 )
                 .style("left", `${event.pageX + 10}px`)
                 .style("top", `${event.pageY - 10}px`)
@@ -462,7 +474,7 @@ function reexpressButtons(){
     worldButton.class = 'button';
     worldButton.addEventListener("click", function(event, d){
         changeExpression(worldButton, regionButton);
-        changeChart(csvData, worldEventData);
+        changeChart(csvData3, worldEventData);
     })
     document.body.appendChild(worldButton);
     worldButton.style.position = 'absolute';
@@ -476,7 +488,7 @@ function reexpressButtons(){
     regionButton.class = 'button';
     regionButton.addEventListener("click", function(event, d){
         changeExpression(regionButton, worldButton);
-        changeChart(csvData2, regionalEventData);
+        changeChart(csvData4, regionalEventData);
     })
     document.body.appendChild(regionButton)
     regionButton.style.position = 'absolute';
