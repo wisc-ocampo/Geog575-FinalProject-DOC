@@ -732,12 +732,10 @@ function setSequenceControls(){
     //button controls
     var index = "";
     const seqButtonTop = `${window.innerHeight - 200}px`;
-    const selectButton = "";
-    var temp = "";
-    sequenceButtons("forwMonthButton", "forwButton", ">", 1, .9);
-    sequenceButtons("backMonthButton", "backButton", "<", -1, .875);
-    sequenceButtons("forwYearButton", "forwButton",">>", 12, .925);
-    sequenceButtons("backYearButton", "backButton","<<", -12, .85);
+    sequenceButtons("forwButton", ">", 1, .9);
+    sequenceButtons("backButton", "<", -1, .875);
+    sequenceButtons("forwButton",">>", 12, .925);
+    sequenceButtons("backButton","<<", -12, .85);
 
 
     function updateMapUnits(){
@@ -749,13 +747,12 @@ function setSequenceControls(){
         }
     };    
 
-    function sequenceButtons(selectButton, className, symbol, n , width){
-        selectButton = document.createElement('button');
-        selectButton.innerText = symbol;
-        selectButton.id = selectButton;
-        selectButton.class = className;
-        selectButton.addEventListener("click", function(event, d){
-            temp = expressed;
+    function sequenceButtons(className, symbol, n , width){
+        var test = document.createElement('button');
+        test.innerText = symbol;
+        test.class = `${className}`;
+        test.addEventListener("click", function(event, d){
+            var temp = expressed;
             console.log(expressed);
             index = parseInt(temp.replace(/\D/g, "")) + n;
             console.log(n);
@@ -765,11 +762,12 @@ function setSequenceControls(){
         
         })
     
-        document.body.appendChild(selectButton);
-        selectButton.style.position = 'absolute';
-        selectButton.style.top = `${seqButtonTop}px`;
-        selectButton.style.left = `${window.innerWidth * width}px`;
-    }
+        document.body.appendChild(test);
+        test.style.position = 'absolute';
+        test.style.top = `${seqButtonTop}px`;
+        test.style.left = `${window.innerWidth * width}px`;
+    };
+    
     
 };
 
