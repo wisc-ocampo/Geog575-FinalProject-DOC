@@ -322,10 +322,12 @@ function setEnumerationUnits(countriesToUse, map, path){
             val = "Regional score";
         }
 
+        var numb = expressed.replace(/\D/g, "");
+
         info
             .html(
                 `Country: ${d.properties.SOVEREIGNT}<br>Subregion:` + 
-                ` ${d.properties.SUBREGION}<br> ${val} for ${expressed}: ${d.properties[expressed]}`
+                ` ${d.properties.SUBREGION}<br> ${val} in ${numb}: ${d.properties[expressed]}`
                 )
             .style("left", `${event.pageX + 10}px`)
             .style("top", `${event.pageY - 10}px`)
@@ -374,11 +376,11 @@ function initializeInfoBox() {
             .attr("id", "info-box")
             .style("position", "absolute")
             .style("right", "0px")
-            .style("top", "0px")
-            .style("height", `${window.innerHeight}px`)
+            .style("top", "120px")
+            .style("height", `${window.innerHeight - 245}px`)
 
             // set width for text wrap
-            .style("width", "300px")
+            .style("width", `${window.innerWidth * .22}px`)
             .style("background", "#f9f9f9")
             .style("border", "1px solid #d3d3d3")
             .style("padding", "10px")
@@ -500,7 +502,7 @@ function setChart(worldMapData, eventData) {
     const height = chartHeight - margin.top - margin.bottom;
 
     // Scales for x and y axes
-    const xScale = d3.scaleLinear().domain([1, 21]).range([0, width]); // Adjust domain if needed
+    const xScale = d3.scaleLinear().domain([1, 20]).range([0, width]); // Adjust domain if needed
     const yScale = d3.scaleLinear().domain([0, 100]).range([height, 0]); // Adjust domain if needed
 
     const regionColorScale = d3.scaleOrdinal(d3.schemeCategory10).domain(
@@ -520,7 +522,7 @@ function setChart(worldMapData, eventData) {
 
     const box = document.getElementById("chart");
     box.style.position = "absolute";
-    box.style.top = `${window.innerHeight * 0.6}px`;
+    box.style.top = `${window.innerHeight * 0.58}px`;
     box.style.left = "1px";
 
     // Append a group for margin handling
@@ -650,7 +652,6 @@ function setChart(worldMapData, eventData) {
 
 function reexpressButtons(){
 
-
     //create and modify button to set map to world comparison expression
     const worldButton = document.createElement('button');
     worldButton.innerText = 'relative to USA';
@@ -665,7 +666,7 @@ function reexpressButtons(){
     document.body.appendChild(worldButton);
     worldButton.style.position = 'absolute';
     worldButton.style.top = "20px";
-    worldButton.style.left = `${window.innerWidth - 300}px`;
+    worldButton.style.left = `${window.innerWidth - 265}px`;
 
     //create and modify button to set map to regional comparison expression
     const regionButton = document.createElement('button')
@@ -681,7 +682,7 @@ function reexpressButtons(){
     document.body.appendChild(regionButton)
     regionButton.style.position = 'absolute';
     regionButton.style.top = "20px";
-    regionButton.style.left = `${window.innerWidth -200}px`;
+    regionButton.style.left = `${window.innerWidth -165}px`;
 
     //create function to toggle buttons
     function changeExpression(ONbutton, OFFbutton){
@@ -739,6 +740,7 @@ function clearMap(){
 
 function setSequenceControls(){
     //slider control 
+//    var sequTitle = 
     var slide = "";
     setSlider();
     function setSlider(){
@@ -747,7 +749,7 @@ function setSequenceControls(){
         .min(2004)
         .max(2023)
         .step(1)
-        .width(300)
+        .width(window.innerWidth * .13)
         .displayValue(true)
         .on('onchange', (val) => {
             d3.select('#value').text(val);
@@ -758,21 +760,21 @@ function setSequenceControls(){
 
         d3.select('#slider')
         .append('svg')
-        .attr('width', 350)
-        .attr('height', 100)
+        .attr('width', window.innerWidth * .16)
+        .attr('height', 75)
         .append('g')
         .attr('transform', 'translate(30,30)')
         .call(slider);
 
         slide = document.getElementById("slider");
         slide.style.position = "absolute";
-        slide.style.top = `${window.innerHeight * 0.85}px`;
-        slide.style.left = `${window.innerWidth -350}px`;
+        slide.style.top = `${window.innerHeight - 100}px`;
+        slide.style.left = `${window.innerWidth * .79}px`;
     };
 
     //button controls
-    sequenceButtons("forwButton", ">", 1, .9);
-    sequenceButtons("backButton", "<", -1, .875);
+    sequenceButtons("forwButton", ">", 1, .952);
+    sequenceButtons("backButton", "<", -1, .782);
 
     function sequenceButtons(className, symbol, n , width){
         var test = document.createElement('button');
@@ -796,7 +798,7 @@ function setSequenceControls(){
     
         document.body.appendChild(test);
         test.style.position = 'absolute';
-        test.style.top = `${window.innerHeight - 50}px`;
+        test.style.top = `${window.innerHeight - 80}px`;
         test.style.left = `${window.innerWidth * width}px`;
     };
     
