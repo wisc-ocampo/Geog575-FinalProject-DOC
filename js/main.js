@@ -315,14 +315,14 @@ function setEnumerationUnits(countriesToUse, map, path){
             .style("padding", "5px")
             .style("display", "none");
     
-        var val = "";
+        let val = "";
         if (scope == "world"){
             val = "Global score";
         } else if (scope == "region"){
             val = "Regional score";
         }
 
-        var numb = expressed.replace(/\D/g, "");
+        let numb = expressed.replace(/\D/g, "");
 
         info
             .html(
@@ -400,7 +400,8 @@ function showInfoBox(infoBox, eventData) {
     infoBox
         .style("display", "block")
         .html(
-            `<h3>${eventData.Country}</h3><p>${eventData.Date}</p><p>${eventData.Event}</p><br><br>${imageHTML}`
+            `<h3>${eventData.Country}</h3><p>${eventData.Date}</p>` + 
+            `<p>${eventData.Event}</p><br><br>${imageHTML}`
         );
 };
 
@@ -652,10 +653,14 @@ function reexpressButtons(){
         scope = "world";
     })
 
+    // button position
+    const worldButtonPositionVertical = "100px"
+    const worldButtonPositionHorizontal = "280"
+
     document.body.appendChild(worldButton);
     worldButton.style.position = 'absolute';
-    worldButton.style.top = "20px";
-    worldButton.style.left = `${window.innerWidth - 265}px`;
+    worldButton.style.bottom = worldButtonPositionVertical;
+    worldButton.style.left = `${window.innerWidth - worldButtonPositionHorizontal}px`;
 
     //create and modify button to set map to regional comparison expression
     const regionButton = document.createElement('button')
@@ -670,8 +675,8 @@ function reexpressButtons(){
     })
     document.body.appendChild(regionButton)
     regionButton.style.position = 'absolute';
-    regionButton.style.top = "20px";
-    regionButton.style.left = `${window.innerWidth -165}px`;
+    regionButton.style.bottom = worldButtonPositionVertical;
+    regionButton.style.left = `${window.innerWidth - worldButtonPositionHorizontal + 100}px`;
 
     //create function to toggle buttons
     function changeExpression(ONbutton, OFFbutton){
@@ -729,11 +734,11 @@ function clearMap(){
 
 function setSequenceControls(){
     //slider control 
-//    var sequTitle = 
-    var slide = "";
+//    const sequTitle = 
+    let slide = "";
     setSlider();
     function setSlider(){
-        var slider = d3
+        const slider = d3
         .sliderHorizontal()
         .min(2004)
         .max(2023)
@@ -766,13 +771,13 @@ function setSequenceControls(){
     sequenceButtons("backButton", "<", -1, .782);
 
     function sequenceButtons(className, symbol, n , width){
-        var test = document.createElement('button');
+        const test = document.createElement('button');
         test.innerText = symbol;
         test.class = `${className}`;
         test.addEventListener("click", function(event, d){
-            var temp = expressed;
-            var number = parseInt(temp.replace(/\D/g, "")) + n;
-            var index = "";
+            const temp = expressed;
+            let number = parseInt(temp.replace(/\D/g, "")) + n;
+            let index = "";
             if (number > 2023){
                 index = number - 2023 + 2004;
             } else if (number < 2004){
