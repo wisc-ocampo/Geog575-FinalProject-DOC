@@ -34,8 +34,8 @@
 
     // set months for map re-expression
     const attrArray = [];
-    for (let i = 1; i < 245; i++) {
-        attrArray.push(`month_${i}`);
+    for (let i = 2004; i < 2024; i++) {
+        attrArray.push(`max_${i}`);
     }
 
     // create map projection
@@ -99,14 +99,12 @@ function setMap(){
 // DATA
 
     const promises = [    
-    d3.csv("data/world.csv"),    
+    d3.csv("data/worldMax.csv"),    
     d3.json("data/worldCountry.topojson"), 
-    d3.csv("data/regional.csv"),
+    d3.csv("data/regionalMax.csv"),
     d3.json("data/regionalCountry.topojson"), 
     d3.csv("data/World_POI.csv"),
-    d3.csv("data/Regional_POI.csv"),
-    d3.csv("data/worldMax.csv"),
-    d3.csv("data/regionalMax.csv")
+    d3.csv("data/Regional_POI.csv")
     ];
     Promise.all(promises).then(callback);
 
@@ -117,8 +115,8 @@ function setMap(){
         regionalMapUnits = data[3],
         worldEventData = data[4],
         regionalEventData = data[5],
-        worldChartMax =data[6],
-        regionalChartMax = data[7]
+        worldChartMax =data[0],
+        regionalChartMax = data[2]
 
         const baseCountries = topojson
                 .feature(worldMapUnits, worldMapUnits.objects.worldCountry);
@@ -777,8 +775,6 @@ function setSequenceControls(){
     //button controls
     sequenceButtons("forwButton", ">", 1, .9);
     sequenceButtons("backButton", "<", -1, .875);
-    sequenceButtons("forwButton",">>", 12, .925);
-    sequenceButtons("backButton","<<", -12, .85);  
 
     function sequenceButtons(className, symbol, n , width){
         var test = document.createElement('button');
@@ -788,15 +784,15 @@ function setSequenceControls(){
             var temp = expressed;
             var number = parseInt(temp.replace(/\D/g, "")) + n;
             var index = "";
-            if (number > 240){
-                index = number - 240;
-            } else if (number <= 0){
-                index = number + 240;
+            if (number > 2023){
+                index = number - 2023 + 2004;
+            } else if (number < 2004){
+                index = 2023 - (2004 - number);
             } else {
                 index = number;
             }
 
-            expressed = attrArray[index-1];
+            expressed = attrArray[index-2004];
             updateMapUnits();
         })
     
