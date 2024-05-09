@@ -153,6 +153,7 @@ function setMap(){
         reexpressButtons();
         makeRegionColorscales();
         setSequenceControls();
+
     };
 };
 
@@ -699,6 +700,8 @@ function clearMap(){
 //SEQUENCE CONTROLS
 
 function setSequenceControls(){
+
+    //slider control 
     var slider = d3
         .sliderHorizontal()
         .min(1)
@@ -708,7 +711,8 @@ function setSequenceControls(){
         .displayValue(true)
         .on('onchange', (val) => {
             d3.select('#value').text(val);
-            updateMapUnits(val);
+            expressed = attrArray[val-1];
+            updateMapUnits();
         });
 
     d3.select('#slider')
@@ -724,16 +728,50 @@ function setSequenceControls(){
     slide.style.position = "absolute";
     slide.style.top = `${window.innerHeight * 0.85}px`;
     slide.style.left = `${window.innerWidth -350}px`;
+
+    //button controls
+    var index = "";
+    const seqButtonTop = `${window.innerHeight - 200}px`;
+    const selectButton = "";
+    var temp = "";
+    sequenceButtons("forwMonthButton", "forwButton", ">", 1, .9);
+    sequenceButtons("backMonthButton", "backButton", "<", -1, .875);
+    sequenceButtons("forwYearButton", "forwButton",">>", 12, .925);
+    sequenceButtons("backYearButton", "backButton","<<", -12, .85);
+
+
+    function updateMapUnits(){
+        clearMap();
+        if (scope == "world"){
+            setEnumerationUnits(worldCountries, map, path); 
+        } else if (scope == "region"){
+            setEnumerationUnits(regionalCountries, map, path); 
+        }
+    };    
+
+    function sequenceButtons(selectButton, className, symbol, n , width){
+        selectButton = document.createElement('button');
+        selectButton.innerText = symbol;
+        selectButton.id = selectButton;
+        selectButton.class = className;
+        selectButton.addEventListener("click", function(event, d){
+            temp = expressed;
+            console.log(expressed);
+            index = parseInt(temp.replace(/\D/g, "")) + n;
+            console.log(n);
+            expressed = attrArray[index-1];
+            console.log(expressed);
+            updateMapUnits();
+        
+        })
+    
+        document.body.appendChild(selectButton);
+        selectButton.style.position = 'absolute';
+        selectButton.style.top = `${seqButtonTop}px`;
+        selectButton.style.left = `${window.innerWidth * width}px`;
+    }
+    
 };
 
-function updateMapUnits(n){
-    expressed = attrArray[n-1];
-    clearMap();
-    if (scope == "world"){
-        setEnumerationUnits(worldCountries, map, path); 
-    } else if (scope == "region"){
-        setEnumerationUnits(regionalCountries, map, path); 
-    }
-};    
 
 })();
