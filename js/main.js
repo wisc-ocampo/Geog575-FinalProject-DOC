@@ -114,9 +114,7 @@ function setMap(){
         regionalMapData = data[2],
         regionalMapUnits = data[3],
         worldEventData = data[4],
-        regionalEventData = data[5],
-        worldChartMax =data[0],
-        regionalChartMax = data[2]
+        regionalEventData = data[5]
 
         const baseCountries = topojson
                 .feature(worldMapUnits, worldMapUnits.objects.worldCountry);
@@ -147,7 +145,7 @@ function setMap(){
 
         world_colorScale = makeColorScale(worldMapData);
         setEnumerationUnits(worldCountries, map, path, world_colorScale); 
-        setChart(worldChartMax, worldEventData);     
+        setChart(worldMapData, worldEventData);     
         reexpressButtons();
         makeRegionColorscales();
         setSequenceControls();
@@ -660,7 +658,7 @@ function reexpressButtons(){
     worldButton.class = 'button';
     worldButton.addEventListener("click", function(event, d){
         changeExpression(worldButton, regionButton);
-        changeChart(worldChartMax, worldEventData);
+        changeChart(worldMapData, worldEventData);
         scope = "world";
     })
 
@@ -676,7 +674,7 @@ function reexpressButtons(){
     regionButton.class = 'button';
     regionButton.addEventListener("click", function(event, d){
         changeExpression(regionButton, worldButton);
-        changeChart(regionalChartMax, regionalEventData);
+        changeChart(regionalMapData, regionalEventData);
         scope = "region";
 
     })
