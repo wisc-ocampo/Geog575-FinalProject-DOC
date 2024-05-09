@@ -1,8 +1,10 @@
-//insert code here!
+// MAKE PROGRAM PSEUDOGLOBAL
+
 (function(){
 
-    //pseudo-global variables
-    // Define unique subregions and create color scale
+// PSEUODOGLOBAL VARIABLES
+    
+    // define subregions (for color)
     const uniqueSubregions = [
         "Antarctica",
         "Australia and New Zealand",
@@ -29,111 +31,157 @@
         "Western Asia",
         "Western Europe"
     ];
-    var attrArray = []; //list of months
+
+    // set months for map re-expression
+    const attrArray = [];
     for (let i = 1; i < 245; i++) {
         attrArray.push(`month_${i}`);
     }
-    var currentView = "world";
-    var projection;
-    var worldCountries = "", regionalCountries = "", path = "", map = "", csvData = "", csvData2 = "", regionalEventData = "", csvData3 = "", csvData4 = "";
-    var reds = "", blues = "", greens = "", oranges = "", purples = "", grays = "";
-    var expressed = attrArray[2]; //initial attribute
 
-    //begin script when window loads
+    // create map projection
+    let projection;
+        worldCountries = "",
+        regionalCountries = "",
+        path = "",
+        map = "",
+        worldMapData = "",
+        regionalMapData = "",
+        regionalEventData = "",
+        worldChartMax = "",
+        regionalChartMax = "";
+        reds = "",
+        blues = "",
+        greens = "",
+        oranges = "",
+        purples = "",
+        grays = "",
+        scope = "world";
+
+        // sets starting attribute
+        expressed = attrArray[0]; 
+
     window.onload = setMap();
 
-    //set up choropleth map
+// MAP
 function setMap(){
 
-    //map frame dimensions
-    var width = window.innerWidth * .8,
+    const width = window.innerWidth * .75,
         height = window.innerHeight * .7;
 
-    //create new svg container for the map
-    map = d3.select("body")
+    // create map SVG
+    map = d3
+        .select("body")
         .append("svg")
         .attr("class", "map")
         .attr("width", width)
         .attr("height", height)
         .attr("id", "map");
 
-        const box = document.getElementById(`map`);
+        const box = document
+        .getElementById(`map`);
         box.style.position = 'absolute';
         box.style.top = 1;
         box.style.left = 1;
 
 
-    //create Equal Earth equal area projection
-    projection = d3.geoEqualEarth()
-        .center([0, 5])
+    // set equal area projection
+    projection = d3
+        .geoEqualEarth()
+        .center([0, 0])
         .rotate([-10, 0, 0])
-        .scale(window.innerWidth / 6.75)
+        .scale(window.innerWidth / 7.5)
         .translate([width / 2, height / 2]);
-        
-    path = d3.geoPath()
+    
+    path = d3
+        .geoPath()
         .projection(projection);
 
-    //use Promise.all to parallelize asynchronous data loading
-    var promises = [];    
-    promises.push(d3.csv("data/world.csv")); //load attributes from csv    
-    promises.push(d3.json("data/_110mCountries.topojson")); //load spatial data 
-    promises.push(d3.csv("data/regional.csv")); //load attributes from csv 
-    promises.push(d3.json("data/region110mCountries.topojson")); //load spatial 
-    promises.push(d3.csv("data/World_POI.csv"));
-    promises.push(d3.csv("data/Regional_POI.csv"));
-    promises.push(d3.csv("data/worldMax.csv"));
-    promises.push(d3.csv("data/regionalMax.csv"));
+// DATA
+
+    const promises = [    
+    d3.csv("data/world.csv"),    
+    d3.json("data/worldCountry.topojson"), 
+    d3.csv("data/regional.csv"),
+    d3.json("data/regionalCountry.topojson"), 
+    d3.csv("data/World_POI.csv"),
+    d3.csv("data/Regional_POI.csv"),
+    d3.csv("data/worldMax.csv"),
+    d3.csv("data/regionalMax.csv")
+    ];
     Promise.all(promises).then(callback);
 
     function callback(data){               
-        csvData = data[0], countries = data[1], worldEventData = data[4], csvData2 = data[2], countriesRegional = data[3], regionalEventData = data[5]
-        csvData3 =data[6], csvData4 = data[7]
-        var baseCountries = topojson.feature(countries, countries.objects._110mCountries);
-        worldCountries = topojson.feature(countries, countries.objects._110mCountries).features;
-        regionalCountries = topojson.feature(countriesRegional, countriesRegional.objects.region110mCountries).features;
+        worldMapData = data[0],
+        worldMapUnits = data[1],
+        regionalMapData = data[2],
+        regionalMapUnits = data[3],
+        worldEventData = data[4],
+        regionalEventData = data[5],
+        worldChartMax =data[6],
+        regionalChartMax = data[7]
+
+        const baseCountries = topojson
+                .feature(worldMapUnits, worldMapUnits.objects.worldCountry);
+            worldCountries = topojson
+                .feature(worldMapUnits, worldMapUnits.objects.worldCountry)
+                .features;
+            regionalCountries = topojson
+                .feature(regionalMapUnits, regionalMapUnits.objects.regionalCountry)
+                .features;
+
+// MAP
 
         setGraticule (map, path);
 
-        var base = map.append("path")
+        const base = map
+            .append("path")
             .datum(baseCountries)
             .attr("class", "baseCountries")
             .attr("d", path);
 
-        //join csv data to GeoJSON enumeration units
-        worldCountries = joinData(worldCountries, csvData);
-        regionalCountries = joinData(regionalCountries, csvData2);
+// DATA
 
-        world_colorScale = makeColorScale(csvData);
+    // join .csvs to .topojson
+        worldCountries = joinData(worldCountries, worldMapData);
+        regionalCountries = joinData(regionalCountries, regionalMapData);
 
-        //add enumeration units to the map
+// MAP
+
+        world_colorScale = makeColorScale(worldMapData);
         setEnumerationUnits(worldCountries, map, path, world_colorScale); 
-        setChart(csvData3, worldEventData);     
+        setChart(worldChartMax, worldEventData);     
         reexpressButtons();
         makeRegionColorscales();
+        setSequenceControls();
 
     };
-}; //end of setMap()
+};
 
-//join topojson with csv data
+// DATA
+
+    // join data
 function joinData(UsedCountries, csv){
-    //loop through csv to assign each set of csv attribute values to geojson region
-    for (var i=0; i<csv.length; i++){
-        var csvCountry = csv[i]; //the current region
-        var csvKey = csvCountry.SOVEREIGNT; //the CSV primary key
 
-        //loop through geojson regions to find correct region
-        for (var a=0; a<UsedCountries.length; a++){
+    // loop through .csv attributes to join all to .topojson
+    for (let i=0; i<csv.length; i++){
+        const csvCountry = csv[i];
+            csvKey = csvCountry.SOVEREIGNT;
 
-            var geojsonProps = UsedCountries[a].properties; //the current region geojson properties
-            var geojsonKey = geojsonProps.SOVEREIGNT; //the geojson primary key
+        // loop through .csv regions
+        for (let a=0; a<UsedCountries.length; a++){
 
-                //where primary keys match, transfer csv data to geojson properties object
+            // sets country with region
+            const geojsonProps = UsedCountries[a].properties;
+
+            // sets geojson primary key
+            const geojsonKey = geojsonProps.SOVEREIGNT;
+
+            // if match, attach data to .topojson
             if (geojsonKey == csvKey){
 
-                //assign all attributes and values
                 attrArray.forEach(function(attr){
-                    var val = parseFloat(csvCountry[attr]); //get csv attribute value
-                    geojsonProps[attr] = val; //assign attribute and value to geojson properties
+                    const val = parseFloat(csvCountry[attr]); 
+                    geojsonProps[attr] = val;
                 });
             };
         };
@@ -141,10 +189,11 @@ function joinData(UsedCountries, csv){
     return UsedCountries;
 };
 
-//create units and set choropleth coloring and cartogram sizing
+// CHOROPLETH MAP
+
 function setEnumerationUnits(countriesToUse, map, path){
 
-    //set non-contiguous cartogram scaling
+    // set scale by data
     function transform(d, expressed) {
         const [x, y] = path.centroid(d);
 
@@ -164,7 +213,8 @@ function setEnumerationUnits(countriesToUse, map, path){
       }
 
     //add countries to map
-    var countries = map.selectAll(".countries")
+    const worldMapUnits = map
+        .selectAll(".worldMapUnits")
         .data(countriesToUse)
         .enter()
         .append("path")
@@ -176,65 +226,128 @@ function setEnumerationUnits(countriesToUse, map, path){
         })
         .attr("d", path)
         .style("fill", function(d){
+
             if (d.properties[expressed] > 0){
+
                 if (countriesToUse == worldCountries){
                     return world_colorScale(d.properties[expressed])
-                } else if (d.properties.SUBREGION == "Eastern Asia" || d.properties.SUBREGION == "Central America" || d.properties.SUBREGION == "Middle Africa"){
+
+                } else if (d.properties.SUBREGION == "Eastern Asia" ||
+                    d.properties.SUBREGION == "Central America" ||
+                    d.properties.SUBREGION == "Middle Africa"){
                     return reds(d.properties[expressed]);
-                } else if (d.properties.SUBREGION == "Australia and New Zealand" || d.properties.SUBREGION == "Eastern Africa" || d.properties.SUBREGION == "Eastern Europe" ||  d.properties.SUBREGION == "Central Asia"){
+
+                } else if (d.properties.SUBREGION == "Australia and New Zealand" ||
+                    d.properties.SUBREGION == "Eastern Africa" ||
+                    d.properties.SUBREGION == "Eastern Europe" ||
+                    d.properties.SUBREGION == "Central Asia"){
                     return blues(d.properties[expressed]);
-                } else if (d.properties.SUBREGION == "South-Eastern Asia" || d.properties.SUBREGION == "Northern Europe" || d.properties.SUBREGION == "South America"){
+
+                } else if (d.properties.SUBREGION == "South-Eastern Asia" ||
+                        d.properties.SUBREGION == "Northern Europe" ||
+                        d.properties.SUBREGION == "South America"){
                     return oranges(d.properties[expressed]);
-                } else if (d.properties.SUBREGION == "Melanesia" || d.properties.SUBREGION == "Western Africa" || d.properties.SUBREGION == "Southern Europe"){
+
+                } else if (d.properties.SUBREGION == "Melanesia" ||
+                        d.properties.SUBREGION == "Western Africa" ||
+                        d.properties.SUBREGION == "Southern Europe"){
                     return greens(d.properties[expressed]);
-                } else if (d.properties.SUBREGION == "Polynesia" || d.properties.SUBREGION == "Southern Asia" || d.properties.SUBREGION == "Western Asia"){
+
+                } else if (d.properties.SUBREGION == "Polynesia" ||
+                        d.properties.SUBREGION == "Southern Asia" ||
+                        d.properties.SUBREGION == "Western Asia"){
                     return purples(d.properties[expressed]);
+
                 } else {
                     return grays(d.properties[expressed]);
                 }
+
             } else {return "#676767"}
         })
+
         .style("stroke-width", 4)
+
         .style("stroke", function(d){
             if (d.properties[expressed] > 0){
                 return "none"
             } else {return "black"}
         })
+
         .attr("transform", d => transform(d, expressed))
+
         .on("mouseover", (event, d) => {
             d3.selectAll(`#country_${d.properties.SOVEREIGNT.replace(/\s+/g, '')}`)
             .style("stroke-width", 4).style("stroke", "yellow");
-
+            mapLabel(d);
+            
         })
+
         .on("mouseout", (event, d) => {
             d3.selectAll(`.country_${d.properties.SUBREGION.replace(/\s+/g, '')}`)
-            .style("stroke", function(d){
-                if (d.properties[expressed] > 0){
-                    return "none"
-                } else {return "black"}
-            })
-            .style("stroke-width", 4);
-        })
-        .on("click", (event, d) => {
-            d3.selectAll(`.country_${d.properties.SUBREGION.replace(/\s+/g, '')}`)
-            .style("stroke", "yellow")
-            .style("stroke-width", "10px")
 
-            subR = d.properties.SUBREGION.replace(/\s+/g, '');
+                .style("stroke", function(d){
+                    if (d.properties[expressed] > 0){
+                        return "none"
+                    } else {return "black"}
+                })
+
+            .style("stroke-width", 4);
+
+            d3.selectAll(".info").remove()
+        })
+
+        .on("click", (event, d) => {
+            d3
+                .selectAll(`.country_${d.properties.SUBREGION.replace(/\s+/g, '')}`)
+                .style("stroke", "yellow")
+                .style("stroke-width", "10px")
+
             d3.selectAll('[class^="country-line"]').attr("stroke-opacity", 0.1);
-            d3.selectAll(`[class*=${subR}]`).attr("stroke-opacity", 1);
+            d3.selectAll(`[class*=${d.properties.SUBREGION.replace(/\s+/g, '')}]`).attr("stroke-opacity", 1);
         });
 
-        
+
+    function mapLabel(d){
+
+        const info = d3
+            .select("body")
+            .append("div")
+            .attr("class", "info")
+            .style("position", "absolute")
+            .style("background", "#f9f9f9")
+            .style("border", "1px solid #d3d3d3")
+            .style("padding", "5px")
+            .style("display", "none");
+    
+        var val = "";
+        if (scope == "world"){
+            val = "Global score";
+        } else if (scope == "region"){
+            val = "Regional score";
+        }
+
+        info
+            .html(
+                `Country: ${d.properties.SOVEREIGNT}<br>Subregion:` + 
+                ` ${d.properties.SUBREGION}<br> ${val} for ${expressed}: ${d.properties[expressed]}`
+                )
+            .style("left", `${event.pageX + 10}px`)
+            .style("top", `${event.pageY - 10}px`)
+            .style("display", "block");
+                    
+    };
+
 };
 
-//create sequential color scale
-function makeColorScale(){
+// COLOR SCALE
 
+function makeColorScale(){
     const interpolation = d3
         .scaleSequential([0,100], d3.interpolateReds);
     return interpolation
 };
+
+// GRATICULE
 
 function setGraticule(map, path){
     const graticule = d3.geoGraticule().step([10, 10]);
@@ -252,39 +365,40 @@ function setGraticule(map, path){
         .attr("d", d3.geoPath().projection(projection));
 };
 
+// POI SIDEBAR
+
+// create
 function initializeInfoBox() {
-    var infoBox = d3.select("#info-box");
+    let infoBox = d3.select("#info-box");
+    
     if (infoBox.empty()) {
-        infoBox = d3.select("body")
+        infoBox = d3
+            .select("body")
             .append("div")
             .attr("id", "info-box")
             .style("position", "absolute")
             .style("right", "0px")
             .style("top", "0px")
-            .style("height", `${window.innerHeight}px`) // Adjust height to full screen
-            .style("width", "300px") // Fixed width for text wrapping
+            .style("height", `${window.innerHeight}px`)
+
+            // set width for text wrap
+            .style("width", "300px")
             .style("background", "#f9f9f9")
             .style("border", "1px solid #d3d3d3")
             .style("padding", "10px")
-            .style("overflow-y", "auto") // Allow vertical scrolling
-            .style("display", "none"); // Initially hidden
+
+            // vertical scroll
+            .style("overflow-y", "auto")
+            .style("display", "none");
     }
+
     return infoBox;
-}
-function indexToYear(index) {
-    const yearBase = 2004; // Starting year
-    const totalYears = 21; // Total number of years from 2004 to 2023
-    if (index >= 1 && index <= totalYears) {
-        const year = yearBase + (index - 1); // Calculate year from index
-        return `${year}`; // e.g., "2004", "2005", ...
-    }
-    return ""; // Return empty if index is out of range
-}
+};
 
-
-// Function to show the infobox with event data
+// set information
 function showInfoBox(infoBox, eventData) {
     const year = eventData.Date.split('.')[0];
+
     let imagePath;
     if (currentView == "world"){
          imagePath = `img/World/POI_${eventData.Country}_${year}.jpg`;
@@ -295,27 +409,31 @@ function showInfoBox(infoBox, eventData) {
     const imageHTML = `<img src="${imagePath}" alt="${eventData.Country} event" style="width: 100%; height: auto;" />`;
 
     infoBox
-        .style("display", "block") // Show the infobox
+        .style("display", "block")
         .html(
             `<h3>${eventData.Country}</h3><p>${eventData.Date}</p><p>${eventData.Event}</p><br><br>${imageHTML}`
         );
-}
+};
 
-// Function to create event dots with a click interaction for the infobox
-function createEventDots(selection, eventData, xScale, yScale, csvData, showInfoBox) {
+// create event dots; event interactions
+function createEventDots(selection, eventData, xScale, yScale, worldMapData, showInfoBox) {
     const getYear = (date) => {
+
+    // convert year to integer; set valid years
         if (typeof date === "string" && date.includes(".")) {
             const [yearStr, monthStr] = date.split(".");
-            const year = parseInt(yearStr, 10); // Convert to integer
-            if (year >= 2004 && year <= 2023) { // Valid range
-                return year; // Return the year
+            const year = parseInt(yearStr, 10);
+
+            if (year >= 2004 && year <= 2023) {
+                return year;
             }
         }
-        return null; // Return null if invalid
+
+        return null;
     };
 
     const getYCoordinate = (country, year) => {
-        const countryData = csvData.find((c) => c.SOVEREIGNT === country);
+        const countryData = worldMapData.find((c) => c.SOVEREIGNT === country);
 
         if (countryData) {
             const dataKey = `max_${year}`; // Build the data key
@@ -354,10 +472,31 @@ function createEventDots(selection, eventData, xScale, yScale, csvData, showInfo
         });
 }
 
+// SET YEAR FOR CHART
+
+function indexToYear(index) {
+
+    // set starting year; total years
+    const yearBase = 2004;
+    const totalYears = 21;
+
+    // calculate current year; increase year
+    if (index >= 1 && index <= totalYears) {
+        const year = yearBase + (index - 1);
+
+        // e.g., 2004 -> 2005 -> 2006
+        return `${year}`;
+    }
+    
+    // return empty year after all other years
+    return "";
+};
+
+// CHART
 function setChart(csvData, eventData) {
     d3.select("#chart").remove();
-    var chartWidth = window.innerWidth * 0.8;
-    var chartHeight = window.innerHeight * 0.4;
+    const chartWidth = window.innerWidth * 0.8;
+    const chartHeight = window.innerHeight * 0.4;
 
     // Margin for axis
     const margin = { top: 20, right: 90, bottom: 20, left: 40 };
@@ -369,10 +508,11 @@ function setChart(csvData, eventData) {
     const yScale = d3.scaleLinear().domain([0, 100]).range([height, 0]); // Adjust domain if needed
 
     const regionColorScale = d3.scaleOrdinal(d3.schemeCategory10).domain(
-        csvData.map((d) => d.subregion)
+        worldMapData.map((d) => d.subregion)
     );
 
-    var chart = d3
+    // create chart
+    const chart = d3
         .select("body")
         .append("svg")
         .attr("width", chartWidth)
@@ -386,11 +526,16 @@ function setChart(csvData, eventData) {
     box.style.left = "1px";
 
     // Append a group for margin handling
-    var g = chart.append("g").attr("transform", `translate(${margin.left}, ${margin.top})`);
+    const g = chart
+        .append("g")
+        .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
     // X and Y axes
-    g.append("g").attr("transform", `translate(0, ${height})`).call(d3.axisBottom(xScale).ticks(20).tickFormat((d) => indexToYear(d)));
-    g.append("g").append("text")
+    g.append("g")
+        .attr("transform", `translate(0, ${height})`)
+        .call(d3.axisBottom(xScale).ticks(20).tickFormat((d) => indexToYear(d)));
+    g.append("g")
+        .append("text")
         .attr("x", chartWidth*0.905)
         .attr("y", chartHeight*0.9)
         .attr("fill", "currentColor")
@@ -398,7 +543,9 @@ function setChart(csvData, eventData) {
         .style("font-size", "16px")
         .style("font-weight", "bold")
         .text("Years");
-    g.append("g").call(d3.axisLeft(yScale)).append("text")
+    g.append("g")
+        .call(d3.axisLeft(yScale))
+        .append("text")
         .attr("x", -25)
         .attr("y", -9)
         .attr("fill", "currentColor")
@@ -411,31 +558,35 @@ function setChart(csvData, eventData) {
     const line = d3.line().x((d, i) => xScale(i + 1)).y((d) => yScale(d));
     
     // Plot lines for each country
-    var lines = g
+    const lines = g
         .selectAll(".country-line")
-        .data(csvData)
+        .data(worldMapData)
         .enter()
         .append("path")
         .attr("class", (d) => `country-line${d.subregion.replace(/\s+/g, '')}`)
+        
         .attr("d", (d) => {
-            var values = Object.keys(d)
+            const values = Object.keys(d)
                 .filter((key) => key.startsWith("max_"))
                 .map((key) => parseFloat(d[key]));
             return line(values);
         })
+
         .attr("stroke", (d) => regionColorScale(d.subregion))
         .attr("stroke-width", 2)
         .attr("fill", "none");
+
         //create a text element for the chart title
-    var chartTitle = chart
+    const chartTitle = chart
         .append("text")
         .attr("x", chartWidth*0.1)
         .attr("y", 50)
         .attr("class", "chartTitle")
         .text(
         "Google trends values for all countries (coloured based on regions) relative to USA");
+
     // Create tooltip div
-    var tooltip = d3
+    const tooltip = d3
         .select("body")
         .append("div")
         .attr("class", "tooltip")
@@ -449,43 +600,59 @@ function setChart(csvData, eventData) {
     // Add tooltip interaction for lines
     lines
         .on("mouseover", function (event, d) {
-            d3.select(this).attr("stroke", "yellow").attr("stroke-width", 4);
+            d3
+            .select(this)
+            .attr("stroke", "yellow")
+            .attr("stroke-width", 4);
 
-            const mouseX = d3.pointer(event, g.node())[0];
-            const yearIndex = Math.round(xScale.invert(mouseX)); // Get index from xScale
-
+            const mouseX = d3
+                .pointer(event, g.node())[0];
+            const yearIndex = Math
+                .round(xScale.invert(mouseX)); // Get index from xScale
             const year = indexToYear(yearIndex); // Convert index to year
             const yearValue = d[`max_${year}`] || "No data";
 
             tooltip
-            .html(
-                `Country: ${d.SOVEREIGNT}<br>Subregion: ${d.subregion}<br>Year: ${year}` // Display year instead of month
-                )
+
+                // display year, not month
+                .html(
+                    `Country: ${d.SOVEREIGNT}<br>Subregion:` + 
+                    ` ${d.subregion}<br>Year: ${year}`
+                    )
                 .style("left", `${event.pageX + 10}px`)
                 .style("top", `${event.pageY - 10}px`)
                 .style("display", "block");
 
             // Fade other lines
-            lines.filter((other) => other !== d).attr("stroke-opacity", 0.1);
+            lines
+                .filter((other) => other !== d).attr("stroke-opacity", 0.1);
         })
-        .on("mouseout", function (event, d) {
-            d3.select(this)
-                .attr("stroke", (d) => regionColorScale(d.subregion))
-                .attr("stroke-width", 2);
+                .on("mouseout", function (event, d) {
+            
+                    d3
+                    .select(this)
+                    .attr("stroke", (d) => regionColorScale(d.subregion))
+                    .attr("stroke-width", 2);
 
-            tooltip.style("display", "none");
+                tooltip
+                    .style("display", "none");
 
-            lines.attr("stroke-opacity", 1);
-        });
+                lines
+                    .attr("stroke-opacity", 1);
+            });
        // console.log("!!!!!!!!!!!!")
 
-       var infoBox = initializeInfoBox(); // Initialize the infobox
+       const infoBox = initializeInfoBox(); // Initialize the infobox
 
-       createEventDots(g, eventData, xScale, yScale, csvData, (eventData) => showInfoBox(infoBox, eventData));
-}
+       createEventDots(g, eventData, xScale, yScale, worldMapData,
+           (eventData) => showInfoBox(infoBox, eventData));
+};
+
+// TOGGLE BUTTON
 
 function reexpressButtons(){
-    var buttonLeft = `${window.innerWidth - 200}px`
+
+
     //create and modify button to set map to world comparison expression
     const worldButton = document.createElement('button');
     worldButton.innerText = 'relative to USA';
@@ -494,12 +661,14 @@ function reexpressButtons(){
     worldButton.addEventListener("click", function(event, d){
         currentView = "world";
         changeExpression(worldButton, regionButton);
-        changeChart(csvData3, worldEventData);
+        changeChart(worldChartMax, worldEventData);
+        scope = "world";
     })
+
     document.body.appendChild(worldButton);
     worldButton.style.position = 'absolute';
     worldButton.style.top = "20px";
-    worldButton.style.left = buttonLeft;
+    worldButton.style.left = `${window.innerWidth - 300}px`;
 
     //create and modify button to set map to regional comparison expression
     const regionButton = document.createElement('button')
@@ -509,12 +678,14 @@ function reexpressButtons(){
     regionButton.addEventListener("click", function(event, d){
         currentView = "regional";
         changeExpression(regionButton, worldButton);
-        changeChart(csvData4, regionalEventData);
+        changeChart(regionalChartMax, regionalEventData);
+        scope = "region";
+
     })
     document.body.appendChild(regionButton)
     regionButton.style.position = 'absolute';
-    regionButton.style.top = "78px";
-    regionButton.style.left = buttonLeft;
+    regionButton.style.top = "20px";
+    regionButton.style.left = `${window.innerWidth -200}px`;
 
     //create function to toggle buttons
     function changeExpression(ONbutton, OFFbutton){
@@ -523,28 +694,33 @@ function reexpressButtons(){
 
         ONbutton.style.backgroundColor = "#a6a6a6";
         OFFbutton.style.backgroundColor = "#d9d9d9";
+
         if (ONbutton.id == "worldButton"){
             ONbutton.style.borderTopLeftRadius = "12px";
-            ONbutton.style.borderTopRightRadius = "12px";
-            OFFbutton.style.borderBottomLeftRadius = "2px";
+            ONbutton.style.borderBottomLeftRadius = "12px";
+            OFFbutton.style.borderTopRightRadius = "2px";
             OFFbutton.style.borderBottomRightRadius = "2px";
             setEnumerationUnits(worldCountries, map, path); 
         } else {
             OFFbutton.style.borderTopLeftRadius = "2px";
-            OFFbutton.style.borderTopRightRadius = "2px";
-            ONbutton.style.borderBottomLeftRadius = "12px";
+            OFFbutton.style.borderBottomLeftRadius = "2px";
+            ONbutton.style.borderTopRightRadius = "12px";
             ONbutton.style.borderBottomRightRadius = "12px";
             setEnumerationUnits(regionalCountries, map, path); 
         };
     }
+
     function changeChart(chartData, eventData) {
+
         // Clear the current chart
         d3.select("#chart").remove();
+
         // Recreate the chart with the new data
         setChart(chartData, eventData);
     }
 };
 
+// REGION COLOR SCALES
 function makeRegionColorscales() {
     reds = d3.scaleSequential([0,100], d3.interpolateReds);
     blues = d3.scaleSequential([0,100], d3.interpolateBlues);
@@ -555,10 +731,90 @@ function makeRegionColorscales() {
 
 };
 
+// CLEAR MAP
 function clearMap(){
     const elements = document.querySelectorAll('[class^="country_"]');
     elements.forEach(function(element) {
       element.remove();
     });
 }
+
+//SEQUENCE CONTROLS
+
+function setSequenceControls(){
+    //slider control 
+    var slide = "";
+    setSlider();
+    function setSlider(){
+        var slider = d3
+        .sliderHorizontal()
+        .min(1)
+        .max(240)
+        .step(1)
+        .width(300)
+        .displayValue(true)
+        .on('onchange', (val) => {
+            d3.select('#value').text(val);
+            expressed = attrArray[val-1];
+            updateMapUnits();
+        })
+        .tickValues([12, 24, 36, 48]);
+
+        d3.select('#slider')
+        .append('svg')
+        .attr('width', 350)
+        .attr('height', 100)
+        .append('g')
+        .attr('transform', 'translate(30,30)')
+        .call(slider);
+
+        slide = document.getElementById("slider");
+        slide.style.position = "absolute";
+        slide.style.top = `${window.innerHeight * 0.85}px`;
+        slide.style.left = `${window.innerWidth -350}px`;
+    };
+
+    //button controls
+    const seqButtonTop = `${window.innerHeight - 200}px`;
+    sequenceButtons("forwButton", ">", 1, .9);
+    sequenceButtons("backButton", "<", -1, .875);
+    sequenceButtons("forwButton",">>", 12, .925);
+    sequenceButtons("backButton","<<", -12, .85);  
+
+    function sequenceButtons(className, symbol, n , width){
+        var test = document.createElement('button');
+        test.innerText = symbol;
+        test.class = `${className}`;
+        test.addEventListener("click", function(event, d){
+            var temp = expressed;
+            var number = parseInt(temp.replace(/\D/g, "")) + n;
+            var index = "";
+            if (number > 240){
+                index = number - 240;
+            } else if (number <= 0){
+                index = number + 240;
+            } else {
+                index = number;
+            }
+
+            expressed = attrArray[index-1];
+            updateMapUnits();
+        })
+    
+        document.body.appendChild(test);
+        test.style.position = 'absolute';
+        test.style.top = `${seqButtonTop}px`;
+        test.style.left = `${window.innerWidth * width}px`;
+    };
+    
+    function updateMapUnits(){
+        clearMap();
+        if (scope == "world"){
+            setEnumerationUnits(worldCountries, map, path); 
+        } else if (scope == "region"){
+            setEnumerationUnits(regionalCountries, map, path); 
+        }
+    };  
+};
+
 })();
