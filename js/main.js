@@ -374,6 +374,7 @@ function initializeInfoBox() {
             .select("body")
             .append("div")
             .attr("id", "info-box")
+<<<<<<< Updated upstream
             .style("position", "absolute")
             .style("right", "0px")
             .style("top", "120px")
@@ -388,6 +389,11 @@ function initializeInfoBox() {
             // vertical scroll
             .style("overflow-y", "auto")
             .style("display", "none");
+=======
+            .attr("class", "sideBar")
+            .style("height", `${window.innerHeight}px`)
+            .style("width", "300px")
+>>>>>>> Stashed changes
     }
 
     return infoBox;
