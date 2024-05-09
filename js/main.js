@@ -611,7 +611,7 @@ function setChart(worldMapData, eventData) {
 // TOGGLE BUTTON
 
 function reexpressButtons(){
-    const buttonLeft = `${window.innerWidth - 200}px`
+
 
     //create and modify button to set map to world comparison expression
     const worldButton = document.createElement('button');
@@ -627,7 +627,7 @@ function reexpressButtons(){
     document.body.appendChild(worldButton);
     worldButton.style.position = 'absolute';
     worldButton.style.top = "20px";
-    worldButton.style.left = buttonLeft;
+    worldButton.style.left = `${window.innerWidth - 300}px`;
 
     //create and modify button to set map to regional comparison expression
     const regionButton = document.createElement('button')
@@ -642,8 +642,8 @@ function reexpressButtons(){
     })
     document.body.appendChild(regionButton)
     regionButton.style.position = 'absolute';
-    regionButton.style.top = "78px";
-    regionButton.style.left = buttonLeft;
+    regionButton.style.top = "20px";
+    regionButton.style.left = `${window.innerWidth -200}px`;
 
     //create function to toggle buttons
     function changeExpression(ONbutton, OFFbutton){
@@ -655,14 +655,14 @@ function reexpressButtons(){
 
         if (ONbutton.id == "worldButton"){
             ONbutton.style.borderTopLeftRadius = "12px";
-            ONbutton.style.borderTopRightRadius = "12px";
-            OFFbutton.style.borderBottomLeftRadius = "2px";
+            ONbutton.style.borderBottomLeftRadius = "12px";
+            OFFbutton.style.borderTopRightRadius = "2px";
             OFFbutton.style.borderBottomRightRadius = "2px";
             setEnumerationUnits(worldCountries, map, path); 
         } else {
             OFFbutton.style.borderTopLeftRadius = "2px";
-            OFFbutton.style.borderTopRightRadius = "2px";
-            ONbutton.style.borderBottomLeftRadius = "12px";
+            OFFbutton.style.borderBottomLeftRadius = "2px";
+            ONbutton.style.borderTopRightRadius = "12px";
             ONbutton.style.borderBottomRightRadius = "12px";
             setEnumerationUnits(regionalCountries, map, path); 
         };

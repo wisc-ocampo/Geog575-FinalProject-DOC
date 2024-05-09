@@ -41,6 +41,7 @@ function createSequenceControls(){
             
         //Step 8: update slider
         document.querySelector('.range-slider').value = index;
+        
         updateMapUnits(index);        
         })
         
