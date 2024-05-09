@@ -399,11 +399,14 @@ function initializeInfoBox() {
 function showInfoBox(infoBox, eventData) {
     const year = eventData.Date.split('.')[0];
 
-    // find image
-    const imagePath = `img/World/POI_${eventData.Country}_${year}.jpg`; 
-    const imageHTML = `<img src="${imagePath}"` + 
-        `alt="${eventData.Country} event"` + 
-        `style="width: 100%; height: auto;" />`;
+    let imagePath;
+    if (currentView == "world"){
+         imagePath = `img/World/POI_${eventData.Country}_${year}.jpg`;
+    } else {
+         imagePath = `img/Regional/POI_${eventData.Country}_${year}.jpg`;
+    }
+     
+    const imageHTML = `<img src="${imagePath}" alt="${eventData.Country} event" style="width: 100%; height: auto;" />`;
 
     infoBox
         .style("display", "block")
@@ -490,7 +493,8 @@ function indexToYear(index) {
 };
 
 // CHART
-function setChart(worldMapData, eventData) {
+function setChart(csvData, eventData) {
+    d3.select("#chart").remove();
     const chartWidth = window.innerWidth * 0.8;
     const chartHeight = window.innerHeight * 0.4;
 
@@ -518,7 +522,7 @@ function setChart(worldMapData, eventData) {
 
     const box = document.getElementById("chart");
     box.style.position = "absolute";
-    box.style.top = `${window.innerHeight * 0.6}px`;
+    box.style.top = `${window.innerHeight * 0.8}px`;
     box.style.left = "1px";
 
     // Append a group for margin handling
@@ -532,7 +536,7 @@ function setChart(worldMapData, eventData) {
         .call(d3.axisBottom(xScale).ticks(20).tickFormat((d) => indexToYear(d)));
     g.append("g")
         .append("text")
-        .attr("x", chartWidth*0.9)
+        .attr("x", chartWidth*0.905)
         .attr("y", chartHeight*0.9)
         .attr("fill", "currentColor")
         .attr("text-anchor", "start")
@@ -575,8 +579,8 @@ function setChart(worldMapData, eventData) {
         //create a text element for the chart title
     const chartTitle = chart
         .append("text")
-        .attr("x", chartWidth*0.2)
-        .attr("y", 40)
+        .attr("x", chartWidth*0.1)
+        .attr("y", 50)
         .attr("class", "chartTitle")
         .text(
         "Google trends values for all countries (coloured based on regions) relative to USA");
@@ -655,6 +659,7 @@ function reexpressButtons(){
     worldButton.id = 'worldButton';
     worldButton.class = 'button';
     worldButton.addEventListener("click", function(event, d){
+        currentView = "world";
         changeExpression(worldButton, regionButton);
         changeChart(worldChartMax, worldEventData);
         scope = "world";
@@ -671,6 +676,7 @@ function reexpressButtons(){
     regionButton.id = 'regionButton';
     regionButton.class = 'button';
     regionButton.addEventListener("click", function(event, d){
+        currentView = "regional";
         changeExpression(regionButton, worldButton);
         changeChart(regionalChartMax, regionalEventData);
         scope = "region";
@@ -793,11 +799,6 @@ function setSequenceControls(){
 
             expressed = attrArray[index-1];
             updateMapUnits();
-
-
-
-
-
         })
     
         document.body.appendChild(test);
@@ -815,6 +816,5 @@ function setSequenceControls(){
         }
     };  
 };
-
 
 })();
