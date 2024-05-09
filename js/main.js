@@ -400,7 +400,7 @@ function showInfoBox(infoBox, eventData) {
     const year = eventData.Date.split('.')[0];
 
     let imagePath;
-    if (currentView == "world"){
+    if (scope == "world"){
          imagePath = `img/World/POI_${eventData.Country}_${year}.jpg`;
     } else {
          imagePath = `img/Regional/POI_${eventData.Country}_${year}.jpg`;
@@ -493,7 +493,7 @@ function indexToYear(index) {
 };
 
 // CHART
-function setChart(csvData, eventData) {
+function setChart(worldMapData, eventData) {
     d3.select("#chart").remove();
     const chartWidth = window.innerWidth * 0.8;
     const chartHeight = window.innerHeight * 0.4;
@@ -510,6 +510,8 @@ function setChart(csvData, eventData) {
     const regionColorScale = d3.scaleOrdinal(d3.schemeCategory10).domain(
         worldMapData.map((d) => d.subregion)
     );
+    
+    
 
     // create chart
     const chart = d3
@@ -522,7 +524,7 @@ function setChart(csvData, eventData) {
 
     const box = document.getElementById("chart");
     box.style.position = "absolute";
-    box.style.top = `${window.innerHeight * 0.8}px`;
+    box.style.top = `${window.innerHeight * 0.6}px`;
     box.style.left = "1px";
 
     // Append a group for margin handling
@@ -659,7 +661,6 @@ function reexpressButtons(){
     worldButton.id = 'worldButton';
     worldButton.class = 'button';
     worldButton.addEventListener("click", function(event, d){
-        currentView = "world";
         changeExpression(worldButton, regionButton);
         changeChart(worldChartMax, worldEventData);
         scope = "world";
@@ -676,7 +677,6 @@ function reexpressButtons(){
     regionButton.id = 'regionButton';
     regionButton.class = 'button';
     regionButton.addEventListener("click", function(event, d){
-        currentView = "regional";
         changeExpression(regionButton, worldButton);
         changeChart(regionalChartMax, regionalEventData);
         scope = "region";
@@ -775,7 +775,6 @@ function setSequenceControls(){
     };
 
     //button controls
-    const seqButtonTop = `${window.innerHeight - 200}px`;
     sequenceButtons("forwButton", ">", 1, .9);
     sequenceButtons("backButton", "<", -1, .875);
     sequenceButtons("forwButton",">>", 12, .925);
@@ -803,7 +802,7 @@ function setSequenceControls(){
     
         document.body.appendChild(test);
         test.style.position = 'absolute';
-        test.style.top = `${seqButtonTop}px`;
+        test.style.top = `${window.innerHeight - 50}px`;
         test.style.left = `${window.innerWidth * width}px`;
     };
     
