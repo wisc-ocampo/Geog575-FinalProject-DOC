@@ -278,6 +278,8 @@ function setEnumerationUnits(countriesToUse, map, path){
         .on("mouseover", (event, d) => {
             d3.selectAll(`#country_${d.properties.SOVEREIGNT.replace(/\s+/g, '')}`)
             .style("stroke-width", 4).style("stroke", "yellow");
+            mapLabel(d);
+            
         })
 
         .on("mouseout", (event, d) => {
@@ -290,6 +292,8 @@ function setEnumerationUnits(countriesToUse, map, path){
                 })
 
             .style("stroke-width", 4);
+
+            d3.selectAll(".info").remove()
         })
 
         .on("click", (event, d) => {
@@ -301,6 +305,38 @@ function setEnumerationUnits(countriesToUse, map, path){
             d3.selectAll('[class^="country-line"]').attr("stroke-opacity", 0.1);
             d3.selectAll(`[class*=${d.properties.SUBREGION.replace(/\s+/g, '')}]`).attr("stroke-opacity", 1);
         });
+
+
+    function mapLabel(d){
+
+        const info = d3
+            .select("body")
+            .append("div")
+            .attr("class", "info")
+            .style("position", "absolute")
+            .style("background", "#f9f9f9")
+            .style("border", "1px solid #d3d3d3")
+            .style("padding", "5px")
+            .style("display", "none");
+    
+        var val = "";
+        if (scope == "world"){
+            val = "Global score";
+        } else if (scope == "region"){
+            val = "Regional score";
+        }
+
+        info
+            .html(
+                `Country: ${d.properties.SOVEREIGNT}<br>Subregion:` + 
+                ` ${d.properties.SUBREGION}<br> ${val} for ${expressed}: ${d.properties[expressed]}`
+                )
+            .style("left", `${event.pageX + 10}px`)
+            .style("top", `${event.pageY - 10}px`)
+            .style("display", "block");
+                    
+    };
+
 };
 
 // COLOR SCALE
