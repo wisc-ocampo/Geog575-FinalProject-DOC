@@ -34,7 +34,7 @@
         attrArray.push(`month_${i}`);
     }
     var projection;
-    var worldCountries = "", regionalCountries = "", path = "", map = "", csvData = "", csvData2 = "", regionalEventData = "";
+    var worldCountries = "", regionalCountries = "", path = "", map = "", csvData = "", csvData2 = "", colors = [];
     var reds = "", blues = "", greens = "", oranges = "", purples = "", grays = "";
     var expressed = attrArray[2]; //initial attribute
 
@@ -78,12 +78,11 @@ function setMap(){
     promises.push(d3.json("data/_110mCountries.topojson")); //load spatial data 
     promises.push(d3.csv("data/regional.csv")); //load attributes from csv 
     promises.push(d3.json("data/region110mCountries.topojson")); //load spatial 
-    promises.push(d3.csv("data/World_POI.csv"));
-    promises.push(d3.csv("data/Regional_POI.csv"));
+    promises.push(d3.csv("data/World_POI.csv"))   
     Promise.all(promises).then(callback);
 
     function callback(data){               
-        csvData = data[0], countries = data[1], worldEventData = data[4], csvData2 = data[2], countriesRegional = data[3], regionalEventData = data[5]
+        csvData = data[0], countries = data[1], worldEventData = data[4], csvData2 = data[2], countriesRegional = data[3];
 
         var baseCountries = topojson.feature(countries, countries.objects._110mCountries);
         worldCountries = topojson.feature(countries, countries.objects._110mCountries).features;
@@ -104,7 +103,7 @@ function setMap(){
 
         //add enumeration units to the map
         setEnumerationUnits(worldCountries, map, path, world_colorScale); 
-        setChart(csvData, worldEventData);     
+        setChart(csvData);     
         reexpressButtons();
         makeRegionColorscales();
 
@@ -280,7 +279,6 @@ function createEventDots(selection, eventData, xScale, yScale, csvData, showInfo
             const yearBase = 2004;
             const monthIndex = (year - yearBase) * 12 + month;
             if (monthIndex >= 1 && monthIndex <= 240) {
-                
                 return monthIndex;
             }
             return null;
@@ -290,7 +288,6 @@ function createEventDots(selection, eventData, xScale, yScale, csvData, showInfo
 
     const getYCoordinate = (country, monthIndex) => {
         const countryData = csvData.find((c) => c.SOVEREIGNT === country);
-        console.log(countryData)
         if (countryData) {
             return yScale(parseFloat(countryData[`month_${monthIndex}`]));
         }
@@ -325,7 +322,7 @@ function createEventDots(selection, eventData, xScale, yScale, csvData, showInfo
         });
 }
 
-function setChart(csvData, eventData) {
+function setChart(csvData) {
     var chartWidth = window.innerWidth * 0.8;
     var chartHeight = window.innerHeight * 0.4;
 
@@ -450,7 +447,7 @@ function setChart(csvData, eventData) {
 
        var infoBox = initializeInfoBox(); // Initialize the infobox
 
-       createEventDots(g, eventData, xScale, yScale, csvData, (eventData) => showInfoBox(infoBox, eventData));
+       createEventDots(g, worldEventData, xScale, yScale, csvData, (eventData) => showInfoBox(infoBox, eventData));
 }
 
 function reexpressButtons(){
@@ -462,7 +459,7 @@ function reexpressButtons(){
     worldButton.class = 'button';
     worldButton.addEventListener("click", function(event, d){
         changeExpression(worldButton, regionButton);
-        changeChart(csvData, worldEventData);
+        changeChart(csvData, "worldButton", "regionButton");
     })
     document.body.appendChild(worldButton);
     worldButton.style.position = 'absolute';
@@ -476,7 +473,8 @@ function reexpressButtons(){
     regionButton.class = 'button';
     regionButton.addEventListener("click", function(event, d){
         changeExpression(regionButton, worldButton);
-        changeChart(csvData2, regionalEventData);
+        changeChart(csvData2, "regionButton", "worldButton");
+
     })
     document.body.appendChild(regionButton)
     regionButton.style.position = 'absolute';
@@ -504,11 +502,12 @@ function reexpressButtons(){
             setEnumerationUnits(regionalCountries, map, path); 
         };
     }
-    function changeChart(chartData, eventData) {
+    function changeChart(chartData, ONbuttonID, OFFbuttonID) {
         // Clear the current chart
         d3.select("#chart").remove();
+
         // Recreate the chart with the new data
-        setChart(chartData, eventData);
+        setChart(chartData);
     }
 };
 
