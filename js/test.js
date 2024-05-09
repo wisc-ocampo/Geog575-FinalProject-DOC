@@ -1,59 +1,36 @@
-// SEQUENCE CONTROLS
-function createSequenceControls(){
-    var container = L.DomUtil.create('div', 'sequence-control-container');
-    //add label
-            container.insertAdjacentHTML('beforeend', '<h3>Sequence by month</h3> </button>'); 
-            
-            //create range input element (slider)
-            container.insertAdjacentHTML('beforeend', '<input class="range-slider" type="range">');
-            container.querySelector(".range-slider").max = 240;
-            container.querySelector(".range-slider").min = 1;
-            container.querySelector(".range-slider").value = 1;
-            container.querySelector(".range-slider").step = 1;
+if (countriesToUse == worldCountries){
+    return world_colorScale(d.properties[expressed])
 
-            //add skip buttons
-            container.insertAdjacentHTML('beforeend', '<button class="step" id="reverse"><</button>'); 
-            container.insertAdjacentHTML('beforeend', '<button class="step" id="forward">></button>');
+} else if (d.properties.SUBREGION == "Northern Africa" ||
+    d.properties.SUBREGION == "Northern America" ||
+    d.properties.SUBREGION == "Southern Africa"){
+    return reds(d.properties[expressed]);
 
-            //disable any mouse event listeners for the container
-            L.DomEvent.disableClickPropagation(container);
+} else if (d.properties.SUBREGION == "Australia and New Zealand" ||
+    d.properties.SUBREGION == "Eastern Africa" ||
+    d.properties.SUBREGION == "Eastern Europe" ||
+    d.properties.SUBREGION == "Central America" ||
+    d.properties.SUBREGION == "Central Asia"){
+    return blues(d.properties[expressed]);
 
-            return container;
-        }
+} else if (d.properties.SUBREGION == "Southern Asia" ||
+    d.properties.SUBREGION == "Northern Europe" ||
+    d.properties.SUBREGION == "South America"){
+    return oranges(d.properties[expressed]);
 
+} else if (d.properties.SUBREGION == "Melanesia" ||
+    d.properties.SUBREGION == "Eastern Asia" ||
+    d.properties.SUBREGION == "Western Africa" ||
+    d.properties.SUBREGION == "Southern Europe"){
+    return greens(d.properties[expressed]);
 
-    //click listener for buttons
-    document.querySelectorAll('.step').forEach(function(step){
-    
-        step.addEventListener("input", function(){
-        var index = document.querySelector('.range-slider').value;
-            
-        //Step 6: increment or decrement depending on button clicked
-        if (step.id == 'forward'){
-            index++;
-            //Step 7: if past the last attribute, wrap around to first attribute
-            index = index > 240 ? 1 : index;
-        } else if (step.id == 'reverse'){
-           index--;
-           //Step 7: if past the first attribute, wrap around to last attribute
-           index = index < 1 ? 240 : index;
-       };
-            
-        //Step 8: update slider
-        document.querySelector('.range-slider').value = index;
-        
-        updateMapUnits(index);        
-        })
-        
-    
-    })
-            
-    //input listener for slider
-//    document.querySelector('.range-slider').addEventListener('input', function(){            
-    d3.select('range-slider')
-    .on("input", (event, d) => {
-        var index = this.value;
-        updateMapUnits(index);
-    });
-   
+} else if (d.properties.SUBREGION == "Polynesia" ||
+    d.properties.SUBREGION == "Middle Africa" ||
+    d.properties.SUBREGION == "South-Eastern Asia" ||
+    d.properties.SUBREGION == "Western Europe" ||
+    d.properties.SUBREGION == "Western Asia"){
+    return purples(d.properties[expressed]);
 
+} else {
+    return grays(d.properties[expressed]);
+}

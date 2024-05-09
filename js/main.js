@@ -228,30 +228,34 @@ function setEnumerationUnits(countriesToUse, map, path){
                 if (countriesToUse == worldCountries){
                     return world_colorScale(d.properties[expressed])
 
-                } else if (d.properties.SUBREGION == "Eastern Asia" ||
-                    d.properties.SUBREGION == "Central America" ||
-                    d.properties.SUBREGION == "Middle Africa"){
+                } else if (d.properties.SUBREGION == "Northern Africa" ||
+                    d.properties.SUBREGION == "Northern America" ||
+                    d.properties.SUBREGION == "Southern Africa"){
                     return reds(d.properties[expressed]);
 
                 } else if (d.properties.SUBREGION == "Australia and New Zealand" ||
                     d.properties.SUBREGION == "Eastern Africa" ||
                     d.properties.SUBREGION == "Eastern Europe" ||
+                    d.properties.SUBREGION == "Central America" ||
                     d.properties.SUBREGION == "Central Asia"){
                     return blues(d.properties[expressed]);
 
-                } else if (d.properties.SUBREGION == "South-Eastern Asia" ||
-                        d.properties.SUBREGION == "Northern Europe" ||
-                        d.properties.SUBREGION == "South America"){
+                } else if (d.properties.SUBREGION == "Southern Asia" ||
+                    d.properties.SUBREGION == "Northern Europe" ||
+                    d.properties.SUBREGION == "South America"){
                     return oranges(d.properties[expressed]);
 
                 } else if (d.properties.SUBREGION == "Melanesia" ||
-                        d.properties.SUBREGION == "Western Africa" ||
-                        d.properties.SUBREGION == "Southern Europe"){
+                    d.properties.SUBREGION == "Eastern Asia" ||
+                    d.properties.SUBREGION == "Western Africa" ||
+                    d.properties.SUBREGION == "Southern Europe"){
                     return greens(d.properties[expressed]);
 
                 } else if (d.properties.SUBREGION == "Polynesia" ||
-                        d.properties.SUBREGION == "Southern Asia" ||
-                        d.properties.SUBREGION == "Western Asia"){
+                    d.properties.SUBREGION == "Middle Africa" ||
+                    d.properties.SUBREGION == "South-Eastern Asia" ||
+                    d.properties.SUBREGION == "Western Europe" ||
+                    d.properties.SUBREGION == "Western Asia"){
                     return purples(d.properties[expressed]);
 
                 } else {
@@ -377,6 +381,7 @@ function initializeInfoBox() {
             .attr("class", "sideBar")
             .style("height", `${window.innerHeight - 150}px`)
             .style("width", `${window.innerWidth * .22}px`)
+            .style("top", "120px");
     }
 
     return infoBox;
@@ -561,8 +566,41 @@ function setChart(worldMapData, eventData) {
                 .map((key) => parseFloat(d[key]));
             return line(values);
         })
+        .style("stroke", function(d){
+            if (d.subregion == "Northern Africa" ||
+                d.subregion == "Northern America" ||
+                d.subregion == "Southern Africa"){
+                return "red";
 
-        .attr("stroke", (d) => regionColorScale(d.subregion))
+            } else if (d.subregion == "Australia and New Zealand" ||
+                d.subregion == "Eastern Africa" ||
+                d.subregion == "Eastern Europe" ||
+                d.subregion == "Central America" ||
+                d.subregion == "Central Asia"){
+           return "blue";
+
+            } else if (d.subregion == "Southern Asia" ||
+                d.subregion == "Northern Europe" ||
+                d.subregion == "South America"){
+                    return "orange";
+
+            } else if (d.subregion == "Melanesia" ||
+                d.subregion == "Eastern Asia" ||
+                d.subregion == "Western Africa" ||
+                d.subregion == "Southern Europe"){
+                return "green";
+
+            } else if (d.subregion == "Polynesia" ||
+                d.subregion == "Middle Africa" ||
+                d.subregion == "South-Eastern Asia" ||
+                d.subregion == "Western Europe" ||
+                d.subregion == "Western Asia"){
+                return "purple";
+
+            } else {
+                return "black";
+            }
+        })
         .attr("stroke-width", 2)
         .attr("fill", "none");
 
@@ -621,7 +659,41 @@ function setChart(worldMapData, eventData) {
             
                     d3
                     .select(this)
-                    .attr("stroke", (d) => regionColorScale(d.subregion))
+                    .style("stroke", function(d){
+                        if (d.subregion == "Northern Africa" ||
+                            d.subregion == "Northern America" ||
+                            d.subregion == "Southern Africa"){
+                            return "red";
+            
+                        } else if (d.subregion == "Australia and New Zealand" ||
+                            d.subregion == "Eastern Africa" ||
+                            d.subregion == "Eastern Europe" ||
+                            d.subregion == "Central America" ||
+                            d.subregion == "Central Asia"){
+                       return "blue";
+            
+                        } else if (d.subregion == "Southern Asia" ||
+                            d.subregion == "Northern Europe" ||
+                            d.subregion == "South America"){
+                                return "orange";
+            
+                        } else if (d.subregion == "Melanesia" ||
+                            d.subregion == "Eastern Asia" ||
+                            d.subregion == "Western Africa" ||
+                            d.subregion == "Southern Europe"){
+                            return "green";
+            
+                        } else if (d.subregion == "Polynesia" ||
+                            d.subregion == "Middle Africa" ||
+                            d.subregion == "South-Eastern Asia" ||
+                            d.subregion == "Western Europe" ||
+                            d.subregion == "Western Asia"){
+                            return "purple";
+            
+                        } else {
+                            return "black";
+                        }
+                    })
                     .attr("stroke-width", 2);
 
                 tooltip
@@ -743,8 +815,8 @@ function setSequenceControls(){
         .min(2004)
         .max(2023)
         .step(1)
-        .width(window.innerWidth * .13)
-        .displayValue(true)
+        .width(window.innerWidth * .16)
+        .displayValue(false)
         .on('onchange', (val) => {
             d3.select('#value').text(val);
             expressed = attrArray[val-2004];
@@ -754,17 +826,16 @@ function setSequenceControls(){
 
         d3.select('#slider')
         .append('svg')
-        .attr('width', window.innerWidth * .16)
+        .attr('width', window.innerWidth * .22)
         .attr('height', 75)
         .append('g')
         .attr('transform', 'translate(30,30)')
         .call(slider);
 
-        slide = document.getElementById("slider");
+        var slide = document.getElementById("slider");
         slide.style.position = "absolute";
         slide.style.top = `${window.innerHeight - 100}px`;
-        slide.style.left = `${window.innerWidth * .79}px`;
-    };
+        slide.style.left = `${window.innerWidth * .78}px`;
 
     //button controls
     sequenceButtons("forwButton", ">", 1, .952);
@@ -805,5 +876,5 @@ function setSequenceControls(){
         }
     };  
 };
-
+}
 })();
