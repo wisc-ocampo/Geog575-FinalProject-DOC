@@ -202,7 +202,6 @@ function setEnumerationUnits(countriesToUse, map, path){
             d3.selectAll(`.country_${d.properties.SUBREGION.replace(/\s+/g, '')}`)
             .style("stroke", "yellow")
             .style("stroke-width", "10px")
-
         })
         .on("mouseout", (event, d) => {
             d3.selectAll(`.country_${d.properties.SUBREGION.replace(/\s+/g, '')}`)
@@ -213,6 +212,13 @@ function setEnumerationUnits(countriesToUse, map, path){
             })
             .style("stroke-width", 4);
         })
+        .on("click", (event, d) => {
+            subR = d.properties.SUBREGION.replace(/\s+/g, '');
+            d3.selectAll('[class^="country-line"]').attr("stroke-opacity", 0.1);
+            d3.selectAll(`[class*=${subR}]`).attr("stroke-opacity", 1);
+        });
+
+        
 };
 
 //create sequential color scale
@@ -290,7 +296,7 @@ function createEventDots(selection, eventData, xScale, yScale, csvData, showInfo
 
     const getYCoordinate = (country, monthIndex) => {
         const countryData = csvData.find((c) => c.SOVEREIGNT === country);
-        console.log(countryData)
+//        console.log(countryData)
         if (countryData) {
             return yScale(parseFloat(countryData[`month_${monthIndex}`]));
         }
@@ -386,7 +392,7 @@ function setChart(csvData, eventData) {
         .data(csvData)
         .enter()
         .append("path")
-        .attr("class", (d) => "country-line " + d.SOVEREIGNT)
+        .attr("class", (d) => `country-line${d.subregion.replace(/\s+/g, '')}`)
         .attr("d", (d) => {
             var values = Object.keys(d)
                 .filter((key) => key.startsWith("month_"))
