@@ -54,17 +54,18 @@
         greens = "",
         oranges = "",
         purples = "",
-        grays = "";
+        grays = "",
+        scope = "world";
 
         // sets starting attribute
-        expressed = attrArray[2]; 
+        expressed = attrArray[0]; 
 
     window.onload = setMap();
 
 // MAP
 function setMap(){
 
-    const width = window.innerWidth * .8,
+    const width = window.innerWidth * .75,
         height = window.innerHeight * .7;
 
     // create map SVG
@@ -86,9 +87,9 @@ function setMap(){
     // set equal area projection
     projection = d3
         .geoEqualEarth()
-        .center([0, 5])
+        .center([0, 0])
         .rotate([-10, 0, 0])
-        .scale(window.innerWidth / 6.75)
+        .scale(window.innerWidth / 7.5)
         .translate([width / 2, height / 2]);
     
     path = d3
@@ -151,6 +152,7 @@ function setMap(){
         setChart(worldChartMax, worldEventData);     
         reexpressButtons();
         makeRegionColorscales();
+        setSequenceControls();
     };
 };
 
@@ -612,12 +614,13 @@ function reexpressButtons(){
 
     //create and modify button to set map to world comparison expression
     const worldButton = document.createElement('button');
-        worldButton.innerText = 'relative to USA';
-        worldButton.id = 'worldButton';
-        worldButton.class = 'button';
-        worldButton.addEventListener("click", function(event, d){
+    worldButton.innerText = 'relative to USA';
+    worldButton.id = 'worldButton';
+    worldButton.class = 'button';
+    worldButton.addEventListener("click", function(event, d){
         changeExpression(worldButton, regionButton);
         changeChart(worldChartMax, worldEventData);
+        scope = "world";
     })
 
     document.body.appendChild(worldButton);
@@ -633,6 +636,8 @@ function reexpressButtons(){
     regionButton.addEventListener("click", function(event, d){
         changeExpression(regionButton, worldButton);
         changeChart(regionalChartMax, regionalEventData);
+        scope = "region";
+
     })
     document.body.appendChild(regionButton)
     regionButton.style.position = 'absolute';
@@ -690,4 +695,45 @@ function clearMap(){
       element.remove();
     });
 }
+
+//SEQUENCE CONTROLS
+
+function setSequenceControls(){
+    var slider = d3
+        .sliderHorizontal()
+        .min(1)
+        .max(240)
+        .step(1)
+        .width(300)
+        .displayValue(true)
+        .on('onchange', (val) => {
+            d3.select('#value').text(val);
+            updateMapUnits(val);
+        });
+
+    d3.select('#slider')
+        .append('svg')
+        .attr('width', 350)
+        .attr('height', 100)
+        .append('g')
+        .attr('transform', 'translate(30,30)')
+        .call(slider)
+        .attr();
+
+    const slide = document.getElementById("slider");
+    slide.style.position = "absolute";
+    slide.style.top = `${window.innerHeight * 0.85}px`;
+    slide.style.left = `${window.innerWidth -350}px`;
+};
+
+function updateMapUnits(n){
+    expressed = attrArray[n-1];
+    clearMap();
+    if (scope == "world"){
+        setEnumerationUnits(worldCountries, map, path); 
+    } else if (scope == "region"){
+        setEnumerationUnits(regionalCountries, map, path); 
+    }
+};    
+
 })();

@@ -33,6 +33,7 @@
 
 `worldCountry.topojson`
 > the topojson for the map
+>> removed "{"type":null,"properties":{"SOVEREIGNT":"North Korea","SUBREGION":"Eastern Asia"}},"
 
 `worldMax.csv`
 > global interest data by year; max value; for chart
