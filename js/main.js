@@ -210,8 +210,6 @@ function setEnumerationUnits(countriesToUse, map, path){
       }
 
     //add countries to map
-    // verify - am not sure what "countries" does and if it needs to match data[1] above
-    // const countries = map.selectAll(".countries")
     const worldMapUnits = map
         .selectAll(".worldMapUnits")
         .data(countriesToUse)
@@ -297,15 +295,13 @@ function setEnumerationUnits(countriesToUse, map, path){
                 .style("stroke", "yellow")
                 .style("stroke-width", "10px")
 
-            subR = d.properties.SUBREGION.replace(/\s+/g, '');
             d3.selectAll('[class^="country-line"]').attr("stroke-opacity", 0.1);
-            d3.selectAll(`[class*=${subR}]`).attr("stroke-opacity", 1);
+            d3.selectAll(`[class*=${d.properties.SUBREGION.replace(/\s+/g, '')}]`).attr("stroke-opacity", 1);
         });
 };
 
 // COLOR SCALE
 
-// verify - am confused how this color scale works
 function makeColorScale(){
     const interpolation = d3
         .scaleSequential([0,100], d3.interpolateReds);
