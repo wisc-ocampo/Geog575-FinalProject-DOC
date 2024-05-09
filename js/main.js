@@ -381,7 +381,6 @@ function initializeInfoBox() {
             .attr("class", "sideBar")
             .style("height", `${window.innerHeight - 150}px`)
             .style("width", `${window.innerWidth * .22}px`)
-            .style("top", "120px");
     }
 
     return infoBox;
@@ -537,7 +536,7 @@ function setChart(worldMapData, eventData) {
         .attr("text-anchor", "start")
         .style("font-size", "16px")
         .style("font-weight", "bold")
-        .text("Years");
+        .text("Year");
     g.append("g")
         .call(d3.axisLeft(yScale))
         .append("text")
@@ -713,6 +712,9 @@ function setChart(worldMapData, eventData) {
 // TOGGLE BUTTON
 
 function reexpressButtons(){
+        // slide.style.position = "absolute";
+        // slide.style.top = `${window.innerHeight - 100}px`;
+        // slide.style.left = `${window.innerWidth * .78}px`;
 
     //create and modify button to set map to world comparison expression
     const worldButton = document.createElement('button');
@@ -726,13 +728,13 @@ function reexpressButtons(){
     })
 
     // button position
-    const worldButtonPositionVertical = "100px"
-    const worldButtonPositionHorizontal = "280"
+    const worldButtonPositionVertical = `${window.innerHeight - 180}px`;
+    const worldButtonPositionHorizontal = `.12`
 
     document.body.appendChild(worldButton);
     worldButton.style.position = 'absolute';
-    worldButton.style.bottom = worldButtonPositionVertical;
-    worldButton.style.left = `${window.innerWidth - worldButtonPositionHorizontal}px`;
+    worldButton.style.top = worldButtonPositionVertical;
+    worldButton.style.right = `${window.innerWidth * worldButtonPositionHorizontal}px`;
 
     //create and modify button to set map to regional comparison expression
     const regionButton = document.createElement('button')
@@ -747,8 +749,8 @@ function reexpressButtons(){
     })
     document.body.appendChild(regionButton)
     regionButton.style.position = 'absolute';
-    regionButton.style.bottom = worldButtonPositionVertical;
-    regionButton.style.left = `${window.innerWidth - worldButtonPositionHorizontal + 100}px`;
+    regionButton.style.top = worldButtonPositionVertical;
+    regionButton.style.right = `${window.innerWidth * worldButtonPositionHorizontal - 100}px`;
 
     //create function to toggle buttons
     function changeExpression(ONbutton, OFFbutton){
@@ -815,8 +817,8 @@ function setSequenceControls(){
         .min(2004)
         .max(2023)
         .step(1)
-        .width(window.innerWidth * .16)
-        .displayValue(false)
+        .width(window.innerWidth * .18)
+        .displayValue(true)
         .on('onchange', (val) => {
             d3.select('#value').text(val);
             expressed = attrArray[val-2004];
@@ -838,34 +840,34 @@ function setSequenceControls(){
         slide.style.left = `${window.innerWidth * .78}px`;
 
     //button controls
-    sequenceButtons("forwButton", ">", 1, .952);
-    sequenceButtons("backButton", "<", -1, .782);
-
-    function sequenceButtons(className, symbol, n , width){
-        const test = document.createElement('button');
-        test.innerText = symbol;
-        test.class = `${className}`;
-        test.addEventListener("click", function(event, d){
-            const temp = expressed;
-            let number = parseInt(temp.replace(/\D/g, "")) + n;
-            let index = "";
-            if (number > 2023){
-                index = number - 2023 + 2004;
-            } else if (number < 2004){
-                index = 2023 - (2004 - number);
-            } else {
-                index = number;
-            }
-
-            expressed = attrArray[index-2004];
-            updateMapUnits();
-        })
-    
-        document.body.appendChild(test);
-        test.style.position = 'absolute';
-        test.style.top = `${window.innerHeight - 80}px`;
-        test.style.left = `${window.innerWidth * width}px`;
-    };
+    // sequenceButtons("forwButton", ">", 1, .952);
+    // sequenceButtons("backButton", "<", -1, .782);
+    //
+    // function sequenceButtons(className, symbol, n , width){
+    //     const test = document.createElement('button');
+    //     test.innerText = symbol;
+    //     test.class = `${className}`;
+    //     test.addEventListener("click", function(event, d){
+    //         const temp = expressed;
+    //         let number = parseInt(temp.replace(/\D/g, "")) + n;
+    //         let index = "";
+    //         if (number > 2023){
+    //             index = number - 2023 + 2004;
+    //         } else if (number < 2004){
+    //             index = 2023 - (2004 - number);
+    //         } else {
+    //             index = number;
+    //         }
+    //
+    //         expressed = attrArray[index-2004];
+    //         updateMapUnits();
+    //     })
+    // 
+    //     document.body.appendChild(test);
+    //     test.style.position = 'absolute';
+    //     test.style.top = `${window.innerHeight - 80}px`;
+    //     test.style.left = `${window.innerWidth * width}px`;
+    // };
     
     function updateMapUnits(){
         clearMap();
