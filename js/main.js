@@ -700,9 +700,11 @@ function clearMap(){
 //SEQUENCE CONTROLS
 
 function setSequenceControls(){
-
     //slider control 
-    var slider = d3
+    var slide = "";
+    setSlider();
+    function setSlider(){
+        var slider = d3
         .sliderHorizontal()
         .min(1)
         .max(240)
@@ -713,39 +715,29 @@ function setSequenceControls(){
             d3.select('#value').text(val);
             expressed = attrArray[val-1];
             updateMapUnits();
-        });
+        })
+        .tickValues([12, 24, 36, 48]);
 
-    d3.select('#slider')
+        d3.select('#slider')
         .append('svg')
         .attr('width', 350)
         .attr('height', 100)
         .append('g')
         .attr('transform', 'translate(30,30)')
-        .call(slider)
-        .attr();
+        .call(slider);
 
-    const slide = document.getElementById("slider");
-    slide.style.position = "absolute";
-    slide.style.top = `${window.innerHeight * 0.85}px`;
-    slide.style.left = `${window.innerWidth -350}px`;
+        slide = document.getElementById("slider");
+        slide.style.position = "absolute";
+        slide.style.top = `${window.innerHeight * 0.85}px`;
+        slide.style.left = `${window.innerWidth -350}px`;
+    };
 
     //button controls
-    var index = "";
     const seqButtonTop = `${window.innerHeight - 200}px`;
     sequenceButtons("forwButton", ">", 1, .9);
     sequenceButtons("backButton", "<", -1, .875);
     sequenceButtons("forwButton",">>", 12, .925);
-    sequenceButtons("backButton","<<", -12, .85);
-
-
-    function updateMapUnits(){
-        clearMap();
-        if (scope == "world"){
-            setEnumerationUnits(worldCountries, map, path); 
-        } else if (scope == "region"){
-            setEnumerationUnits(regionalCountries, map, path); 
-        }
-    };    
+    sequenceButtons("backButton","<<", -12, .85);  
 
     function sequenceButtons(className, symbol, n , width){
         var test = document.createElement('button');
@@ -753,13 +745,23 @@ function setSequenceControls(){
         test.class = `${className}`;
         test.addEventListener("click", function(event, d){
             var temp = expressed;
-            console.log(expressed);
-            index = parseInt(temp.replace(/\D/g, "")) + n;
-            console.log(n);
+            var number = parseInt(temp.replace(/\D/g, "")) + n;
+            var index = "";
+            if (number > 240){
+                index = number - 240;
+            } else if (number <= 0){
+                index = number + 240;
+            } else {
+                index = number;
+            }
+
             expressed = attrArray[index-1];
-            console.log(expressed);
             updateMapUnits();
-        
+
+
+
+
+
         })
     
         document.body.appendChild(test);
@@ -768,7 +770,14 @@ function setSequenceControls(){
         test.style.left = `${window.innerWidth * width}px`;
     };
     
-    
+    function updateMapUnits(){
+        clearMap();
+        if (scope == "world"){
+            setEnumerationUnits(worldCountries, map, path); 
+        } else if (scope == "region"){
+            setEnumerationUnits(regionalCountries, map, path); 
+        }
+    };  
 };
 
 

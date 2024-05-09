@@ -56,12 +56,3 @@ function createSequenceControls(){
     });
    
 
-    function updateMapUnits(n){
-        expressed = attrArray[n];
-        clearMap();
-        if (scope == "world"){
-            setEnumerationUnits(worldCountries, map, path); 
-        } else if (scope == "region"){
-            setEnumerationUnits(regionalCountries, map, path); 
-        }
-    };    
