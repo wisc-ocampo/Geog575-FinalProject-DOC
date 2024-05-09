@@ -374,26 +374,9 @@ function initializeInfoBox() {
             .select("body")
             .append("div")
             .attr("id", "info-box")
-<<<<<<< Updated upstream
-            .style("position", "absolute")
-            .style("right", "0px")
-            .style("top", "120px")
-            .style("height", `${window.innerHeight - 245}px`)
-
-            // set width for text wrap
-            .style("width", `${window.innerWidth * .22}px`)
-            .style("background", "#f9f9f9")
-            .style("border", "1px solid #d3d3d3")
-            .style("padding", "10px")
-
-            // vertical scroll
-            .style("overflow-y", "auto")
-            .style("display", "none");
-=======
             .attr("class", "sideBar")
-            .style("height", `${window.innerHeight}px`)
-            .style("width", "300px")
->>>>>>> Stashed changes
+            .style("height", `${window.innerHeight - 245}px`)
+            .style("width", `${window.innerWidth * .22}px`)
     }
 
     return infoBox;
