@@ -33,6 +33,7 @@
     for (let i = 1; i < 245; i++) {
         attrArray.push(`month_${i}`);
     }
+    var currentView = "world";
     var projection;
     var worldCountries = "", regionalCountries = "", path = "", map = "", csvData = "", csvData2 = "", regionalEventData = "", csvData3 = "", csvData4 = "";
     var reds = "", blues = "", greens = "", oranges = "", purples = "", grays = "";
@@ -284,7 +285,13 @@ function indexToYear(index) {
 // Function to show the infobox with event data
 function showInfoBox(infoBox, eventData) {
     const year = eventData.Date.split('.')[0];
-    const imagePath = `img/World/POI_${eventData.Country}_${year}.jpg`; 
+    let imagePath;
+    if (currentView == "world"){
+         imagePath = `img/World/POI_${eventData.Country}_${year}.jpg`;
+    } else {
+         imagePath = `img/Regional/POI_${eventData.Country}_${year}.jpg`;
+    }
+     
     const imageHTML = `<img src="${imagePath}" alt="${eventData.Country} event" style="width: 100%; height: auto;" />`;
 
     infoBox
@@ -348,6 +355,7 @@ function createEventDots(selection, eventData, xScale, yScale, csvData, showInfo
 }
 
 function setChart(csvData, eventData) {
+    d3.select("#chart").remove();
     var chartWidth = window.innerWidth * 0.8;
     var chartHeight = window.innerHeight * 0.4;
 
@@ -484,6 +492,7 @@ function reexpressButtons(){
     worldButton.id = 'worldButton';
     worldButton.class = 'button';
     worldButton.addEventListener("click", function(event, d){
+        currentView = "world";
         changeExpression(worldButton, regionButton);
         changeChart(csvData3, worldEventData);
     })
@@ -498,6 +507,7 @@ function reexpressButtons(){
     regionButton.id = 'regionButton';
     regionButton.class = 'button';
     regionButton.addEventListener("click", function(event, d){
+        currentView = "regional";
         changeExpression(regionButton, worldButton);
         changeChart(csvData4, regionalEventData);
     })
