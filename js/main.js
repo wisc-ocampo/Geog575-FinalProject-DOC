@@ -104,8 +104,10 @@ function setMap(){
 
         //add enumeration units to the map
         setEnumerationUnits(worldCountries, map, path, world_colorScale); 
-        setChart(csvData, worldEventData);     
-        reexpressButtons();  
+        setChart(csvData);     
+        reexpressButtons();
+        makeRegionColorscales();
+
     };
 }; //end of setMap()
 
@@ -325,7 +327,7 @@ function createEventDots(selection, eventData, xScale, yScale, csvData, showInfo
 
 function setChart(csvData, eventData) {
     var chartWidth = window.innerWidth * 0.8;
-    var chartHeight = window.innerHeight * 0.45;
+    var chartHeight = window.innerHeight * 0.4;
 
     // Margin for axis
     const margin = { top: 20, right: 90, bottom: 20, left: 40 };
@@ -350,7 +352,7 @@ function setChart(csvData, eventData) {
 
     const box = document.getElementById("chart");
     box.style.position = "absolute";
-    box.style.top = `${window.innerHeight * 0.75}px`;
+    box.style.top = `${window.innerHeight * 0.6}px`;
     box.style.left = "1px";
 
     // Append a group for margin handling
@@ -485,7 +487,6 @@ function reexpressButtons(){
     function changeExpression(ONbutton, OFFbutton){
 
         clearMap();
-        makeRegionColorscales();
 
         ONbutton.style.backgroundColor = "#a6a6a6";
         OFFbutton.style.backgroundColor = "#d9d9d9";
@@ -507,7 +508,7 @@ function reexpressButtons(){
         // Clear the current chart
         d3.select("#chart").remove();
         // Recreate the chart with the new data
-        setChart(chartData,eventData);
+        setChart(chartData);
     }
 };
 
