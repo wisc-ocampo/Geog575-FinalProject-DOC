@@ -166,7 +166,7 @@ function setEnumerationUnits(countriesToUse, map, path){
         .enter()
         .append("path")
         .attr("id", function(d){
-            return "country " + d.properties.SOVEREIGNT;
+            return `country_${d.properties.SOVEREIGNT.replace(/\s+/g, '')}`;
         })
         .attr("class", function(d){
             return `country_${d.properties.SUBREGION.replace(/\s+/g, '')}`;        
@@ -199,9 +199,9 @@ function setEnumerationUnits(countriesToUse, map, path){
         })
         .attr("transform", d => transform(d, expressed))
         .on("mouseover", (event, d) => {
-            d3.selectAll(`.country_${d.properties.SUBREGION.replace(/\s+/g, '')}`)
-            .style("stroke", "yellow")
-            .style("stroke-width", "10px")
+            d3.selectAll(`#country_${d.properties.SOVEREIGNT.replace(/\s+/g, '')}`)
+            .style("stroke-width", 4).style("stroke", "yellow");
+
         })
         .on("mouseout", (event, d) => {
             d3.selectAll(`.country_${d.properties.SUBREGION.replace(/\s+/g, '')}`)
@@ -213,6 +213,10 @@ function setEnumerationUnits(countriesToUse, map, path){
             .style("stroke-width", 4);
         })
         .on("click", (event, d) => {
+            d3.selectAll(`.country_${d.properties.SUBREGION.replace(/\s+/g, '')}`)
+            .style("stroke", "yellow")
+            .style("stroke-width", "10px")
+
             subR = d.properties.SUBREGION.replace(/\s+/g, '');
             d3.selectAll('[class^="country-line"]').attr("stroke-opacity", 0.1);
             d3.selectAll(`[class*=${subR}]`).attr("stroke-opacity", 1);
