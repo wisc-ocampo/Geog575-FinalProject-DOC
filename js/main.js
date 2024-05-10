@@ -917,9 +917,13 @@ function createInfoButtonWithModal() {
             "The <b>line graph</b> offers a different visualization of interest, with the line colors varying based on<br>"+
             "the region of the world the country is from.<br><br>" +
             "You are able to <b>sequence</b> over time to show the distribution of global interest during different<br>"+
-            "years using the slider. Additionally, you can <b>reexpress</b> the relative peak with the toggle switch."
+            "years using the slider. Additionally, you can <b>reexpress</b> the relative peak with the toggle switch.<br><br>" +
+            "<i>Cartographers: Kenz Carlton; Ashmita Dhakal; Francisco Ocampo | May 2024</i>" 
 
-    modalContent.append('p').html(info).style("font-size","18px").style("color","black").style("font-family", "sans-serif");
+    modalContent
+        .append('p')
+        .attr("class", "helpBox")
+        .html(info)
 
     // Event handler for opening the modal
     button.on('click', () => {
