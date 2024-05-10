@@ -38,47 +38,61 @@ body {
 }
 
 #worldButton {
-    background-color: #a6a6a6;
+    background-color: #AFC3D4;
     border-top-left-radius: 12px;
     border-bottom-left-radius: 12px;
     width: 100px;
     height: 80px;
-
+    border-color: black;
 }
 
 #regionButton {
-    background-color: #d9d9d9;
+    background-color: #E0DDCC;
     border-top-right-radius: 2px;
     border-bottom-right-radius: 2px;
     width: 100px;
     height: 80px;
+    border-color: black;
 }
 
 /* CHART */
 
 .chart {
     fill: white;
-}
-
-.tick {
-    stroke: white;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
 .chartTitle {
-    font-family: sans-serif;
-    font-size: 18px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 24px;
     font-weight: bold;
-    fill: #4b4b4b;
+    fill: white;
     white-space: pre-line;
-
+    pointer-events: none;
 }
 
 .parameter-value{
     fill: white;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    pointer-events: none;
 }
 
 .tick{
-    fill: white;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    stroke: white;
+    pointer-events: none;
+}
+
+.event-dot {
+    fill: #D4D3AF;
+    stroke: yellow;
+    stroke-width: 2px;
+}
+
+/* SLIDER */
+
+.track-inset {
+    stroke: #D4D3AF;
 }
 
 /* SIDEBAR */
@@ -91,5 +105,24 @@ body {
     padding: 10px;
     overflow-y: auto;
     display: none;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    pointer-events: none;
+}
+
+/* HOVER */
+
+.tooltip {
+    position: absolute;
+    background: #E0DDCC;
+    border: 0px;
+    padding: 5px;
+    display: none;
+}
+
+.info {
+    position: absolute;
+    background: #E0DDCC;
+    border: 0px;
+    padding: 5px;
+    display: none;
 }

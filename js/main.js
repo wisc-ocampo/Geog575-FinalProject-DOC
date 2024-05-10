@@ -300,7 +300,7 @@ function setEnumerationUnits(countriesToUse, map, path){
             d3
                 .selectAll(`.country_${d.properties.SUBREGION.replace(/\s+/g, '')}`)
                 .style("stroke", "yellow")
-                .style("stroke-width", "10px")
+                .style("stroke-width", "7px")
 
             d3.selectAll('[class^="country-line"]').attr("stroke-opacity", 0.1);
             d3.selectAll(`[class*=${d.properties.SUBREGION.replace(/\s+/g, '')}]`).attr("stroke-opacity", 1);
@@ -345,7 +345,7 @@ function setEnumerationUnits(countriesToUse, map, path){
 
 function makeColorScale(){
     const interpolation = d3
-        .scaleSequential([0,100], d3.interpolateReds);
+        .scaleSequential([0,100], d3.interpolatePlasma);
     return interpolation
 };
 
@@ -458,8 +458,7 @@ function createEventDots(selection, eventData, xScale, yScale, worldMapData, sho
             }
             return yScale(0); // Default if invalid
         })
-        .attr("r", 6)
-        .attr("fill", "red")
+        .attr("r", 5)
         .style("cursor", "pointer")
         .on("click", (event, d) => {
             showInfoBox(d); // Show the infobox on click
@@ -536,6 +535,7 @@ function setChart(worldMapData, eventData) {
         .attr("text-anchor", "start")
         .style("font-size", "16px")
         .style("font-weight", "bold")
+        .style("pointer-events", "none")
         .text("Year");
     g.append("g")
         .call(d3.axisLeft(yScale))
@@ -546,6 +546,7 @@ function setChart(worldMapData, eventData) {
         .attr("text-anchor", "start")
         .style("font-size", "15px")
         .style("font-weight", "bold")
+        .style("pointer-events", "none")
         .text("Trend Value (%)");
 
     // line generator
@@ -601,36 +602,30 @@ function setChart(worldMapData, eventData) {
             }
         })
         .attr("stroke-width", 2)
+        .attr("stroke-opacity", 0.4)
         .attr("fill", "none");
 
         //create a text element for the chart title
     const chartTitle = chart
         .append("text")
-        .attr("x", chartWidth*0.1)
-        .attr("y", 50)
+        .attr("x", chartWidth*0.05)
+        .attr("y", 60)
         .attr("class", "chartTitle")
-        .text(
-        "Google trends values for all countries (coloured based on regions) relative to USA");
+        .text("Every Country's Interest on Google Since 2004 | Click the Dots for More Information!");
 
     // Create tooltip div
     const tooltip = d3
         .select("body")
         .append("div")
         .attr("class", "tooltip")
-        .style("position", "absolute")
-        .style("background", "#f9f9f9")
-        .style("border", "1px solid #d3d3d3")
-        .style("padding", "5px")
-        .style("display", "none");
-
 
     // Add tooltip interaction for lines
     lines
         .on("mouseover", function (event, d) {
             d3
             .select(this)
-            .attr("stroke", "yellow")
-            .attr("stroke-width", 4);
+            .attr("stroke-width", 8)
+            .attr("stroke-opacity", 1);
 
             const mouseX = d3
                 .pointer(event, g.node())[0];
@@ -693,15 +688,14 @@ function setChart(worldMapData, eventData) {
                             return "black";
                         }
                     })
-                    .attr("stroke-width", 2);
+                    .attr("stroke-width", 2)
 
                 tooltip
                     .style("display", "none");
 
                 lines
-                    .attr("stroke-opacity", 1);
+                    .attr("stroke-opacity", 0.4);
             });
-       // console.log("!!!!!!!!!!!!")
 
        const infoBox = initializeInfoBox(); // Initialize the infobox
 
@@ -712,9 +706,6 @@ function setChart(worldMapData, eventData) {
 // TOGGLE BUTTON
 
 function reexpressButtons(){
-        // slide.style.position = "absolute";
-        // slide.style.top = `${window.innerHeight - 100}px`;
-        // slide.style.left = `${window.innerWidth * .78}px`;
 
     //create and modify button to set map to world comparison expression
     const worldButton = document.createElement('button');
@@ -757,8 +748,8 @@ function reexpressButtons(){
 
         clearMap();
 
-        ONbutton.style.backgroundColor = "#a6a6a6";
-        OFFbutton.style.backgroundColor = "#d9d9d9";
+        ONbutton.style.backgroundColor = "#AFC3D4";
+        OFFbutton.style.backgroundColor = "#E0DDCC";
 
         if (ONbutton.id == "worldButton"){
             ONbutton.style.borderTopLeftRadius = "12px";
@@ -777,10 +768,10 @@ function reexpressButtons(){
 
     function changeChart(chartData, eventData) {
 
-        // Clear the current chart
+        // clear the current chart
         d3.select("#chart").remove();
 
-        // Recreate the chart with the new data
+        // recreate the chart with the new data
         setChart(chartData, eventData);
     }
 };
@@ -792,7 +783,7 @@ function makeRegionColorscales() {
     oranges = d3.scaleSequential([0,100], d3.interpolateOranges);
     purples = d3.scaleSequential([0,100], d3.interpolatePurples);
     greens = d3.scaleSequential([0,100], d3.interpolateGreens);
-    grays = d3.scaleSequential([0,100], (d3.interpolate("white", "black")))
+    grays = d3.scaleSequential([0,100], d3.interpolateGreys);
 
 };
 
@@ -807,9 +798,8 @@ function clearMap(){
 //SEQUENCE CONTROLS
 
 function setSequenceControls(){
+    
     //slider control 
-//    const sequTitle = 
-    let slide = "";
     setSlider();
     function setSlider(){
         const slider = d3
@@ -834,41 +824,11 @@ function setSequenceControls(){
         .attr('transform', 'translate(30,30)')
         .call(slider);
 
-        var slide = document.getElementById("slider");
+        let slide = document.getElementById("slider");
         slide.style.position = "absolute";
         slide.style.top = `${window.innerHeight - 100}px`;
         slide.style.left = `${window.innerWidth * .78}px`;
-
-    //button controls
-    // sequenceButtons("forwButton", ">", 1, .952);
-    // sequenceButtons("backButton", "<", -1, .782);
-    //
-    // function sequenceButtons(className, symbol, n , width){
-    //     const test = document.createElement('button');
-    //     test.innerText = symbol;
-    //     test.class = `${className}`;
-    //     test.addEventListener("click", function(event, d){
-    //         const temp = expressed;
-    //         let number = parseInt(temp.replace(/\D/g, "")) + n;
-    //         let index = "";
-    //         if (number > 2023){
-    //             index = number - 2023 + 2004;
-    //         } else if (number < 2004){
-    //             index = 2023 - (2004 - number);
-    //         } else {
-    //             index = number;
-    //         }
-    //
-    //         expressed = attrArray[index-2004];
-    //         updateMapUnits();
-    //     })
-    // 
-    //     document.body.appendChild(test);
-    //     test.style.position = 'absolute';
-    //     test.style.top = `${window.innerHeight - 80}px`;
-    //     test.style.left = `${window.innerWidth * width}px`;
-    // };
-    
+   
     function updateMapUnits(){
         clearMap();
         if (scope == "world"){
