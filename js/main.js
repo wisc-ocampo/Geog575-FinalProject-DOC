@@ -810,6 +810,7 @@ function setSequenceControls(){
         .step(1)
         .width(window.innerWidth * .18)
         .displayValue(true)
+        .tickFormat(d3.format('d'))
         .on('onchange', (val) => {
             d3.select('#value').text(val);
             expressed = attrArray[val-2004];
@@ -840,4 +841,97 @@ function setSequenceControls(){
     };  
 };
 }
+function createInfoButtonWithModal() {
+    // Create the question mark button and position it at the top right corner
+    const buttonContainer = d3.select('body')
+        .append('div') 
+        .attr('id', 'info-button-container')
+        .style('position', 'fixed') 
+        .style('top', '10px') 
+        .style('right', '10px') 
+        .style('z-index', '1001');
+
+    const button = buttonContainer.append('button') 
+        .attr('id', 'info-button')
+        .text('?')
+        .style('background-color', '#f1f1f1') 
+        .style('border', 'none')
+        .style('border-radius', '50%')
+        .style('padding', '10px')
+        .style('cursor', 'pointer')
+        .style('font-size', '16px')
+        .style('color', '#333');
+
+    // Create the modal container that covers the whole screen
+    const modal = d3.select('body') 
+        .append('div')
+        .attr('id', 'info-modal') 
+        .style('display', 'none') 
+        .style('position', 'fixed') 
+        .style('top', '0') 
+        .style('left', '0') 
+        .style('width', '100%') 
+        .style('height', '100%') 
+        .style('background', 'rgba(0, 0, 0, 0.1)') 
+        .style('z-index', '1000') 
+        .style('display', 'flex')
+        .style('justify-content', 'center') 
+        .style('align-items', 'center'); 
+
+    // Create the modal content
+    const modalContent = modal.append('div')
+        .attr('class', 'modal-content') 
+        .style('background', "#E0DDCC")
+        .style('padding', '20px')
+        .style('border-radius', '5px')
+        .style('position', 'relative')
+        .style('text-align', 'left');
+
+    modalContent.append('span') // 'X' button to close the modal
+        .attr('class', 'close')
+        .text('\u00d7') 
+        .style('position', 'absolute')
+        .style('top', '10px') 
+        .style('right', '10px') 
+        .style('cursor', 'pointer') 
+        .style('font-size', '25px') 
+        .style('color', '#333') 
+        .on('click', () => {
+            modal.style('display', 'none'); 
+        });
+
+   
+    var info = "<h3><b><u>About the Interface:</u></b></h3>" +
+                "<b>Objective: </b>"+
+            "This project aims to highlight the discrepancy in interest " +
+            "across regions of the world.<br>" +
+            "Focus has historically, and continues to be, " +
+            "centered on Western (especially American) interests.<br>" +
+            "This affects aid, support, and related activities across the world.<br><br>"+
+            "The <b>cartogram</b> display, through a proportional cartogram and choropleth the interest in<br>"+
+            "particular countries based on global <b>Google trends data </b>(which goes back to January 2004). <br><br>"+
+            "The <b>line graph</b> offers a different visualization of interest, with the line colors varying based on<br>"+
+            "the region of the world the country is from.<br><br>" +
+            "The users are able to <b>sequence </b>over time to show world during different years. <br>"+
+            "The spikes of interest or Point of Interests are integrated in the line graph which can be <br>"+
+            "clicked which opens an <b> information box </b> to retrieve more information about the events. <br><br>"+
+            "Finally the map users can <b> reexpress </b> the view based on world data relative to the USA or local regions."
+
+    modalContent.append('p').html(info).style("font-size","18px").style("color","black").style("font-family", "sans-serif");
+
+    // Event handler for opening the modal
+    button.on('click', () => {
+        modal.style('display', 'flex'); // Show the modal
+    });
+
+    // Event handler to close the modal if user clicks outside the modal content
+    modal.on('click', (event) => {
+        if (event.target === event.currentTarget) {
+            modal.style('display', 'none'); // Hide the modal
+        }
+    });
+}
+
+// Call the function to create the button and modal
+createInfoButtonWithModal();
 })();
