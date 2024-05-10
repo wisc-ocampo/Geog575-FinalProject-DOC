@@ -7,6 +7,7 @@
 - [Carlton, Kenz](https://github.com/KenzCarlton)
 *last updated May 10th, 2024*
 
+![previewGlobal](https://github.com/wisc-ocampo/Geog575-FinalProject-DOC/assets/157857305/50c99214-5cf8-4cac-955a-1a591c533f81)
 ## project overview
 This is the final project submission for Geography 575
 under Professor Robert Roth.
@@ -37,6 +38,7 @@ utter dominance of the global spike in interest in the United States. Users
 are able to access this data through the toggle button in the corner, just 
 above the sequential slider that moves users through the years.
 
+![previewRegional](https://github.com/wisc-ocampo/Geog575-FinalProject-DOC/assets/157857305/b10f8cb9-c0e7-4a59-b93c-89d4ee7c4e61)
 ## theoretical users
 ### target user profile (persona)
 **name and position:**
