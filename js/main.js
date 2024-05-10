@@ -304,7 +304,7 @@ function setEnumerationUnits(countriesToUse, map, path){
                 .style("stroke-width", "7px")
 
             d3.selectAll('[class^="country-line"]').attr("stroke-opacity", 0.1);
-            d3.selectAll(`[class*=${d.properties.SUBREGION.replace(/\s+/g, '')}]`).attr("stroke-opacity", 1);
+            d3.selectAll(`.country-line${d.properties.SUBREGION.replace(/\s+/g, '')}`).attr("stroke-opacity", 1);
         });
 
 
