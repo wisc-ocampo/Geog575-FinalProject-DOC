@@ -612,7 +612,7 @@ function setChart(worldMapData, eventData) {
         .attr("x", chartWidth*0.05)
         .attr("y", 60)
         .attr("class", "chartTitle")
-        .text("Every Country's Interest on Google Since 2004 | Click the Dots for More Information!");
+        .text("Every Country's Interest on Google Since 2004");
 
     // Create tooltip div
     const tooltip = d3
@@ -905,17 +905,19 @@ function createInfoButtonWithModal() {
                 "<b>Objective: </b>"+
             "This project aims to highlight the discrepancy in interest " +
             "across regions of the world.<br>" +
-            "Focus has historically, and continues to be, " +
-            "centered on Western (especially American) interests.<br>" +
-            "This affects aid, support, and related activities across the world.<br><br>"+
-            "The <b>cartogram</b> display, through a proportional cartogram and choropleth the interest in<br>"+
-            "particular countries based on global <b>Google trends data </b>(which goes back to January 2004). <br><br>"+
+            "What we hear about is almost always centered on Western, " +
+            "especially American, interests.<br>" +
+            "Inherently, this shapes how we choose to distribute attention and support around the world.<br><br>" +
+            "Our map is a <b>proportional cartogram and choropleth</b> reflecting global interest in different <br>" +
+            "countries based on existing <b>Google Trends data</b> since 2004. Since the data is relative, we <br>" +
+            "have distinguished interest relative to the US peak, setting <b>November 2020</b> as <b>100%</b> interest, <br>" + 
+            "versus relative to most <i>Googled</i> country in that part of the world.<br><br>" + 
+            "<strong>(Click on a country to see its region, or click on highlighted point in the <br>" +
+            "graph to learn more about what may have caused that spike in interest.)</strong><br><br>" +
             "The <b>line graph</b> offers a different visualization of interest, with the line colors varying based on<br>"+
             "the region of the world the country is from.<br><br>" +
-            "The users are able to <b>sequence </b>over time to show world during different years. <br>"+
-            "The spikes of interest or Point of Interests are integrated in the line graph which can be <br>"+
-            "clicked which opens an <b> information box </b> to retrieve more information about the events. <br><br>"+
-            "Finally the map users can <b> reexpress </b> the view based on world data relative to the USA or local regions."
+            "You are able to <b>sequence</b> over time to show the distribution of global interest during different<br>"+
+            "years using the slider. Additionally, you can <b>reexpress</b> the relative peak with the toggle switch."
 
     modalContent.append('p').html(info).style("font-size","18px").style("color","black").style("font-family", "sans-serif");
 
