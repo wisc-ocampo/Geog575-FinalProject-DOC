@@ -1,6 +1,7 @@
 // MAKE PROGRAM PSEUDOGLOBAL
 
 (function(){
+    document.title = "Trends History";
 
 // PSEUODOGLOBAL VARIABLES
     
@@ -379,7 +380,7 @@ function initializeInfoBox() {
             .append("div")
             .attr("id", "info-box")
             .attr("class", "sideBar")
-            .style("height", `${window.innerHeight - 150}px`)
+            .style("height", `${window.innerHeight - 220}px`)
             .style("width", `${window.innerWidth * .22}px`)
     }
 
