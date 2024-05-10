@@ -106,7 +106,6 @@ body {
     overflow-y: auto;
     display: none;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    pointer-events: none;
 }
 
 /* HOVER */
